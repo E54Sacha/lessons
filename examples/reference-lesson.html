@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Newton's laws of motion · Lessons</title>
+  <meta name="lesson-subject" content="physics">
+  <meta name="lesson-topic" content="mechanics">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-26">
+  <meta name="lesson-source" content="general">
+  <meta name="lesson-quiz" content="newtons-laws.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../index.html">Lessons</a> › Example</nav>
+    <h1><span class="icon">🍎</span>Newton's laws of motion</h1>
+    <p class="lede">Three simple rules that explain how forces make things start, stop, speed up and push back.</p>
+    <div class="tags"><span>beginner</span><span>physics</span><span>2026-11-26</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>A force is a push or a pull. Newton's three laws describe what forces do to objects. The <strong>first law</strong>: nothing changes its motion unless a force makes it. The <strong>second law</strong>: a bigger force gives a bigger change, and a heavier object changes less. The <strong>third law</strong>: when you push something, it pushes you back just as hard.</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>A shopping cart stays still until you push it (law 1). An empty cart speeds up faster than a full one (law 2). And you feel the cart's handle pressing back into your hands (law 3).</p>
+    </aside>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-hand"></i><span class="tag">Your push</span>50 N</div>
+        <div class="arrow c-blue">pushes</div>
+        <div class="node c-purple"><i class="fa-solid fa-cart-shopping"></i><span class="tag">Cart</span>20 kg</div>
+        <div class="arrow back c-orange">pulls</div>
+        <div class="node c-orange"><i class="fa-solid fa-road"></i><span class="tag">Friction</span>10 N</div>
+      </div>
+      <div class="stats" style="margin-top:18px">
+        <div class="stat c-blue"><div class="value">50 N</div><div class="label">to the right</div></div>
+        <div class="stat c-orange"><div class="value">− 10 N</div><div class="label">to the left</div></div>
+        <div class="stat c-green"><div class="value">= 40 N</div><div class="label">net force, to the right</div></div>
+      </div>
+      <figcaption>Only the net force (all forces added together) decides how the object's motion changes.</figcaption>
+    </figure>
+    <figure class="illus">
+      <div class="layers">
+        <div class="layer c-gray"><i class="fa-solid fa-pause"></i><div><strong>Law 1 · Inertia</strong><span>No net force → the motion stays the same.</span></div></div>
+        <div class="layer c-blue"><i class="fa-solid fa-gauge-high"></i><div><strong>Law 2 · F = m × a</strong><span>A net force → the object speeds up or slows down.</span></div></div>
+        <div class="layer c-purple"><i class="fa-solid fa-arrows-left-right"></i><div><strong>Law 3 · Action and reaction</strong><span>Forces come in equal and opposite pairs.</span></div></div>
+      </div>
+      <figcaption>The three laws at a glance.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>Force</dt><dd>A push or a pull, measured in newtons (N).</dd></div>
+      <div><dt>Net force</dt><dd>The total of all forces on an object, with opposite directions subtracting.</dd></div>
+      <div><dt>Mass</dt><dd>How much "stuff" an object contains, in kilograms (kg).</dd></div>
+      <div><dt>Acceleration</dt><dd>How quickly the speed (or direction) changes, in metres per second squared (m/s²).</dd></div>
+      <div><dt>Inertia</dt><dd>An object's tendency to keep doing what it is already doing.</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li><strong>Law 1 (inertia):</strong> if the net force is zero, a still object stays still and a moving object keeps moving at the same speed in a straight line.</li>
+      <li>Find the net force: add forces in the same direction, subtract forces in opposite directions.</li>
+      <li><strong>Law 2:</strong> if the net force is not zero, the object accelerates: \( F = m \times a \), so \( a = F / m \).</li>
+      <li><strong>Law 3:</strong> forces come in pairs. If A pushes B, B pushes A with the same size of force, in the opposite direction.</li>
+    </ol>
+    <figure class="illus">
+      <div class="flow vertical">
+        <div class="node c-gray"><i class="fa-solid fa-plus"></i>Add up all the forces</div>
+        <div class="arrow"></div>
+        <div class="node decision c-blue">Is the net force zero?</div>
+      </div>
+      <div class="branches" style="margin-top:14px">
+        <div class="branch"><span class="chip c-green">yes</span><div class="node c-green"><i class="fa-solid fa-pause"></i><span class="tag">Law 1</span>Motion stays the same</div></div>
+        <div class="branch"><span class="chip c-orange">no</span><div class="node c-orange"><i class="fa-solid fa-gauge-high"></i><span class="tag">Law 2</span>It accelerates<small>a = F / m</small></div></div>
+      </div>
+      <figcaption>Laws 1 and 2 answer one question: does the net force cancel out or not?</figcaption>
+    </figure>
+    <aside class="callout warning">
+      <strong>⚠️ Common mistake</strong>
+      <p>The two forces of law 3 do <strong>not</strong> cancel out, because they act on <strong>different</strong> objects. You push the cart, the cart pushes you.</p>
+    </aside>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-person"></i><span class="tag">You</span>feel 50 N on your hands</div>
+        <div class="arrow both c-purple">50 N each way</div>
+        <div class="node c-purple"><i class="fa-solid fa-cart-shopping"></i><span class="tag">Cart</span>feels 50 N forward</div>
+      </div>
+      <figcaption>Same size, opposite directions, on two different objects.</figcaption>
+    </figure>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>You push a 20 kg shopping cart with 50 N. Friction from the floor pulls back with 10 N. How fast does the cart speed up?</p>
+    <h3>Step 1: net force</h3>
+    <div class="math">$$F_{\text{net}} = 50\ \text{N} - 10\ \text{N} = 40\ \text{N}$$</div>
+    <h3>Step 2: law 2</h3>
+    <div class="math">$$a = \frac{F_{\text{net}}}{m} = \frac{40\ \text{N}}{20\ \text{kg}} = 2\ \text{m/s}^2$$</div>
+    <p>The cart gains 2 m/s of speed every second. Now fill the cart so it weighs 40 kg: the same 40 N gives only \( a = 40 / 40 = 1\ \text{m/s}^2 \). More mass, less acceleration.</p>
+    <h3>Step 3: law 3</h3>
+    <p>While you push the cart with 50 N, the cart pushes your hands back with 50 N.</p>
+    <h3>Step 4: law 1</h3>
+    <p>If you push with exactly 10 N, the forces balance (net force 0). A moving cart then keeps rolling at a steady speed; it does not slow down.</p>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>Predicts the motion of almost everything around you: cars, balls, rockets, bridges.</li>
+        <li>Only one simple formula, \( F = m \times a \), to compute things.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>Stops being exact for objects near the speed of light or for tiny particles like atoms.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>Energy methods:</strong> track kinetic and potential energy instead of forces, often easier when paths are curved.</div>
+      <div><strong>Relativity and quantum mechanics:</strong> needed for very fast or very small objects, where Newton's laws break down.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">An object keeps doing what it is doing unless a _____ acts on it.</p>
+        <details><summary>Answer</summary><p><strong>Force.</strong> This is the first law: without a (net) force, motion does not change.</p></details></li>
+      <li><p class="q">Is it true that a moving object needs a constant force to keep moving?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> With zero net force, a moving object keeps moving forever. Things on Earth slow down only because friction is a force acting against them.</p></details></li>
+      <li><p class="q">The tendency of an object to keep doing what it is already doing is called _____.</p>
+        <details><summary>Answer</summary><p><strong>Inertia.</strong> Inertia is why passengers lurch forward when a bus brakes: their bodies keep moving.</p></details></li>
+      <li><p class="q">Force is measured in a unit called the _____.</p>
+        <details><summary>Answer</summary><p><strong>Newton.</strong> One newton (N) is the force that gives 1 kg an acceleration of 1 m/s².</p></details></li>
+      <li><p class="q">What is the net force on an object?</p>
+        <ol class="options"><li>The biggest force acting on it</li><li>The total of all forces, with opposite directions subtracting</li><li>Only the force you push with</li><li>The object's weight</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> The net force combines every force, taking direction into account. A is tempting, but smaller forces like friction also count.</p></details></li>
+      <li><p class="q">Is it true that an object can be moving even when the forces on it are balanced?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> Balanced forces mean no change in motion, so a moving object keeps moving at a steady speed in a straight line.</p></details></li>
+      <li><p class="q">If you double the net force on the same object, what happens to its acceleration?</p>
+        <ol class="options"><li>It is halved</li><li>It stays the same</li><li>It doubles</li><li>It becomes four times bigger</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> In \( a = F / m \), acceleration grows in proportion to force. A is the mistake of mixing up force and mass.</p></details></li>
+      <li><p class="q">A net force of 10 N acts on a 2 kg object. What is its acceleration?</p>
+        <div class="q-figure"><svg viewBox="0 0 300 110" role="img" aria-label="A 2 kg box pushed by a net force of 10 newtons"><line x1="10" y1="90" x2="290" y2="90" stroke="#8a94a3" stroke-width="2"/><rect x="150" y="34" width="80" height="56" rx="8" fill="#5b7fe0" fill-opacity="0.18" stroke="#5b7fe0" stroke-width="2"/><text x="190" y="68" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="currentColor">2 kg</text><line x1="40" y1="62" x2="138" y2="62" stroke="#e8792b" stroke-width="4" stroke-linecap="round"/><path d="M146 62 l-14 -9 v18 z" fill="#e8792b"/><text x="88" y="48" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#e8792b">10 N</text></svg></div>
+        <ol class="options"><li>20 m/s²</li><li>12 m/s²</li><li>0.2 m/s²</li><li>5 m/s²</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> \( a = F / m = 10 / 2 = 5\ \text{m/s}^2 \). A is tempting, but it multiplies instead of dividing.</p></details></li>
+      <li><p class="q">Why does a heavy object speed up more slowly than a light one when pushed with the same force?</p>
+        <details><summary>Answer</summary><p>Because \( a = F / m \): with the same force, a bigger mass gives a smaller acceleration. A full cart speeds up slower than an empty one.</p></details></li>
+      <li><p class="q">What does the third law say happens when you push on a wall?</p>
+        <div class="q-figure"><svg viewBox="0 0 300 120" role="img" aria-label="A person pushing a wall: one arrow from the hand to the wall, one from the wall back to the hand"><rect x="230" y="10" width="24" height="100" rx="4" fill="#8a94a3" fill-opacity="0.35" stroke="#8a94a3" stroke-width="2"/><circle cx="70" cy="30" r="12" fill="none" stroke="currentColor" stroke-width="3"/><path d="M70 42 v38 M70 80 l-16 28 M70 80 l16 28 M70 54 l70 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><line x1="150" y1="50" x2="214" y2="50" stroke="#5b7fe0" stroke-width="4" stroke-linecap="round"/><path d="M224 50 l-14 -8 v16 z" fill="#5b7fe0"/><line x1="216" y1="74" x2="160" y2="74" stroke="#9b6be0" stroke-width="4" stroke-linecap="round"/><path d="M150 74 l14 -8 v16 z" fill="#9b6be0"/><text x="186" y="40" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#5b7fe0">you → wall</text><text x="186" y="96" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#9b6be0">wall → you</text></svg></div>
+        <details><summary>Answer</summary><p>The wall pushes back on you with a force of the same size in the opposite direction. That is why you feel the wall pressing on your hands.</p></details></li>
+      <li><p class="q">Is it true that the two forces of a third-law pair act on the same object?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> They act on two different objects: you push the cart, and the cart pushes you.</p></details></li>
+      <li><p class="q">Why don't the two forces of a third-law pair cancel each other out?</p>
+        <details><summary>Answer</summary><p>Forces only cancel when they act on the same object. A third-law pair acts on two different objects, so each object feels its own force and can still move.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>Weight and gravity: \( W = m \times g \)</li>
+      <li>Friction and how it depends on the surface</li>
+      <li>Free-body diagrams for drawing all the forces on an object</li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Reference lesson: the tutor copies its layout and illustrations</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="../assets/lesson.js"></script>
+</body>
+</html>
