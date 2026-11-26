@@ -1,0 +1,21 @@
+{
+  "lesson": "maths/linear-algebra/matrices",
+  "title": "Matrices",
+  "subject": "maths",
+  "topic": "linear-algebra",
+  "difficulty": "beginner",
+  "created": "2026-11-26",
+  "questions": [
+    { "id": "q1", "type": "fill_blank", "question": "A matrix is a rectangular grid of numbers arranged in rows and _____.", "answer": "columns", "accept": ["column"], "explanation": "A matrix is organised in rows (across) and columns (down)." },
+    { "id": "q2", "type": "multiple_choice", "question": "A matrix has 2 rows and 3 columns. How do we write its size?", "options": ["3 × 2", "2 × 3", "6", "2 + 3"], "answer": 1, "explanation": "The size is always written rows first, then columns. 3 × 2 is the tempting mistake of putting columns first." },
+    { "id": "q3", "type": "fill_blank", "question": "Each single number inside a matrix is called an _____.", "answer": "entry", "accept": ["element", "entries"], "explanation": "An entry (or element) is one number at one position in the grid." },
+    { "id": "q4", "type": "true_false", "question": "Is it true that you can add any two matrices, even if their sizes are different?", "answer": false, "explanation": "Addition is done entry by entry, so both matrices need exactly the same number of rows and columns." },
+    { "id": "q5", "type": "open", "question": "How do you add two matrices of the same size?", "answer": "You add the entries that are in the same position. For example, the top-left of the result is the top-left of the first plus the top-left of the second.", "explanation": "Addition works place by place, so each position is added on its own." },
+    { "id": "q6", "type": "multiple_choice", "question": "What happens when you multiply a matrix by the number 3?", "options": ["Only the first row is multiplied by 3", "The matrix gets 3 more rows", "Every entry is multiplied by 3", "Only the numbers on the diagonal are multiplied by 3"], "answer": 2, "explanation": "Multiplying by a plain number scales every entry. Multiplying only the first row is tempting, but the rule applies to the whole matrix, not one row." },
+    { "id": "q7", "type": "open", "question": "How do you find one entry of the product of two matrices?", "answer": "You take one row of the first matrix and one column of the second, multiply the numbers pair by pair, and add the results.", "explanation": "This 'row times column' rule is how every entry of a matrix product is built." },
+    { "id": "q8", "type": "true_false", "question": "Is it true that to multiply A by B, the number of columns of A must equal the number of rows of B?", "answer": true, "explanation": "Each row of A is paired with each column of B, so they must contain the same number of values." },
+    { "id": "q9", "type": "multiple_choice", "question": "A is a 2 × 3 matrix and B is a 3 × 4 matrix. What is the size of A × B?", "options": ["3 × 3", "2 × 3", "4 × 2", "2 × 4"], "answer": 3, "explanation": "The inner numbers (3 and 3) must match, and the outer numbers (2 and 4) give the size of the result. 3 × 3 is tempting, but it uses the inner numbers instead of the outer ones." },
+    { "id": "q10", "type": "true_false", "question": "Is it true that A × B always gives the same result as B × A?", "answer": false, "explanation": "Matrix multiplication usually depends on order; in the example, A × B and B × A gave different matrices." },
+    { "id": "q11", "type": "open", "question": "Why are matrices useful?", "answer": "They hold many related numbers in one object and let you work on all of them at once, which helps solve systems of equations, move shapes in graphics, and store data.", "explanation": "Grouping numbers into one object means one operation can handle many numbers together." }
+  ]
+}
