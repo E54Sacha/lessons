@@ -1,0 +1,22 @@
+{
+  "lesson": "physics/mechanics/newtons-laws",
+  "title": "Newton's laws of motion",
+  "subject": "physics",
+  "topic": "mechanics",
+  "difficulty": "beginner",
+  "created": "2026-11-26",
+  "questions": [
+    { "id": "q1", "type": "fill_blank", "question": "An object keeps doing what it is doing unless a _____ acts on it.", "answer": "force", "accept": ["net force", "push or pull"], "explanation": "This is the first law: without a (net) force, motion does not change." },
+    { "id": "q2", "type": "true_false", "question": "Is it true that a moving object needs a constant force to keep moving?", "answer": false, "explanation": "With zero net force, a moving object keeps moving forever. Things on Earth slow down only because friction is a force acting against them." },
+    { "id": "q3", "type": "fill_blank", "question": "The tendency of an object to keep doing what it is already doing is called _____.", "answer": "inertia", "explanation": "Inertia is why passengers lurch forward when a bus brakes: their bodies keep moving." },
+    { "id": "q4", "type": "fill_blank", "question": "Force is measured in a unit called the _____.", "answer": "newton", "accept": ["newtons", "N"], "explanation": "One newton (N) is the force that gives 1 kg an acceleration of 1 m/s²." },
+    { "id": "q5", "type": "multiple_choice", "question": "What is the net force on an object?", "options": ["The biggest force acting on it", "The total of all forces, with opposite directions subtracting", "Only the force you push with", "The object's weight"], "answer": 1, "explanation": "The net force combines every force, taking direction into account. A is tempting, but smaller forces like friction also count." },
+    { "id": "q6", "type": "true_false", "question": "Is it true that an object can be moving even when the forces on it are balanced?", "answer": true, "explanation": "Balanced forces mean no change in motion, so a moving object keeps moving at a steady speed in a straight line." },
+    { "id": "q7", "type": "multiple_choice", "question": "If you double the net force on the same object, what happens to its acceleration?", "options": ["It is halved", "It stays the same", "It doubles", "It becomes four times bigger"], "answer": 2, "explanation": "In a = F / m, acceleration grows in proportion to force. A is the mistake of mixing up force and mass." },
+    { "id": "q8", "type": "multiple_choice", "question": "A net force of 10 N acts on a 2 kg object. What is its acceleration?", "options": ["20 m/s²", "12 m/s²", "0.2 m/s²", "5 m/s²"], "answer": 3, "explanation": "a = F / m = 10 / 2 = 5 m/s². A is tempting, but it multiplies instead of dividing." },
+    { "id": "q9", "type": "open", "question": "Why does a heavy object speed up more slowly than a light one when pushed with the same force?", "answer": "Because a = F / m: with the same force, a bigger mass gives a smaller acceleration.", "explanation": "Because a = F / m: with the same force, a bigger mass gives a smaller acceleration. A full cart speeds up slower than an empty one." },
+    { "id": "q10", "type": "open", "question": "What does the third law say happens when you push on a wall?", "answer": "The wall pushes back on you with a force of the same size in the opposite direction.", "explanation": "The wall pushes back on you with a force of the same size in the opposite direction. That is why you feel the wall pressing on your hands." },
+    { "id": "q11", "type": "true_false", "question": "Is it true that the two forces of a third-law pair act on the same object?", "answer": false, "explanation": "They act on two different objects: you push the cart, and the cart pushes you." },
+    { "id": "q12", "type": "open", "question": "Why don't the two forces of a third-law pair cancel each other out?", "answer": "Because they act on two different objects, and forces only cancel when they act on the same object.", "explanation": "Forces only cancel when they act on the same object. A third-law pair acts on two different objects, so each object feels its own force and can still move." }
+  ]
+}
