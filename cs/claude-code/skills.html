@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude Code skills · Lessons</title>
+  <meta name="lesson-subject" content="cs">
+  <meta name="lesson-topic" content="claude-code">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-26">
+  <meta name="lesson-source" content="claude-dev-toolkit">
+  <meta name="lesson-quiz" content="skills.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › CS › Claude Code</nav>
+    <h1><span class="icon">📘</span>Claude Code skills</h1>
+    <p class="lede">Instructions you write once, and Claude reads only when it needs them.</p>
+    <div class="tags"><span>beginner</span><span>cs</span><span>2026-11-26</span><span>example: claude-dev-toolkit</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>A skill is a set of instructions you write once and Claude reuses whenever it's needed. Instead of explaining the same process every time ("ask me questions first, then write a plan"), you save it in a file.</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>A skill is a recipe card. Claude doesn't memorize every recipe: it glances at the card titles, and only reads a full card when it's time to cook that dish.</p>
+    </aside>
+    <figure>
+      <svg viewBox="0 0 420 210" role="img" aria-label="Three layers: descriptions always loaded, instructions loaded when the skill starts, extra files loaded only when a step needs them">
+        <rect class="svg-accent" x="20" y="20" width="380" height="50" rx="10"/>
+        <text class="svg-strong" x="36" y="42">1. Name + description</text>
+        <text class="svg-label" x="36" y="60">always loaded · a few lines per skill</text>
+        <rect class="svg-box" x="50" y="82" width="350" height="50" rx="10"/>
+        <text class="svg-text" x="66" y="104">2. Full instructions (SKILL.md)</text>
+        <text class="svg-label" x="66" y="122">loaded when your message matches</text>
+        <rect class="svg-box" x="80" y="144" width="320" height="50" rx="10" stroke-dasharray="6 4"/>
+        <text class="svg-text" x="96" y="166">3. Extra files (templates…)</text>
+        <text class="svg-label" x="96" y="184">loaded only when a step needs them</text>
+      </svg>
+      <figcaption>Each layer loads only when it's needed, so having many skills costs very little.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>Skill</dt><dd>A folder with a <code>SKILL.md</code> file that teaches Claude how to do one kind of task.</dd></div>
+      <div><dt>Frontmatter</dt><dd>The few lines between <code>---</code> at the top of the file, holding the name and description.</dd></div>
+      <div><dt>Description</dt><dd>One or two sentences saying what the skill does and when to use it.</dd></div>
+      <div><dt>Plugin</dt><dd>A package that can hold several skills (and other tools) so they install together.</dd></div>
+      <div><dt>Slash command</dt><dd>Typing <code>/plugin-name:skill-name</code> to start a skill yourself.</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li>When Claude Code starts, it reads only the name and description of every skill.</li>
+      <li>You send a message.</li>
+      <li>If your message matches a skill's description, Claude opens that skill and reads its full instructions.</li>
+      <li>Claude follows the instructions step by step, reading extra files only when a step needs them.</li>
+      <li>You can also skip the matching and start a skill directly with its slash command.</li>
+    </ol>
+    <figure>
+      <pre class="mermaid">
+sequenceDiagram
+  participant You
+  participant Claude
+  participant Skill as Skill folder
+  Note over Claude: Knows only the descriptions
+  You->>Claude: "I have an idea for a website"
+  Claude->>Skill: Matches a description, opens SKILL.md
+  Skill-->>Claude: Full instructions
+  Claude->>You: Follows them (asks questions…)
+  Claude->>Skill: Needs the template, reads it
+      </pre>
+      <figcaption>The skill's content enters the conversation only when it's used.</figcaption>
+    </figure>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>The <code>scope-project</code> skill turns a vague project idea into a requirements file. Its description lists the phrases that should start it ("I want to build", "plan this") and when <em>not</em> to use it (bug fixes). It reads its template only when it reaches the writing phase.</p>
+<pre><code>---
+name: scope-project          <span class="comment"># used in /claude-dev-toolkit:scope-project</span>
+description: Turns a project idea into a REQUIREMENTS.md ...
+  Use when the user ... says "new project idea", "I want to build", "plan this" ...
+  Do not use for changes to code in an existing project, bug fixes ...
+---                          <span class="comment"># above: always loaded · below: only when the skill starts</span></code></pre>
+    <aside class="callout tip">
+      <strong>✅ Tip</strong>
+      <p>Write the description with the words you would actually type. Saying when <em>not</em> to use the skill is just as useful.</p>
+    </aside>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>You stop repeating the same instructions in every conversation.</li>
+        <li>Claude follows the same steps every time, so results are consistent.</li>
+        <li>Only descriptions load at the start, so many skills cost very little.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>If the description is vague, Claude won't know when to use the skill.</li>
+        <li>Instructions are guidance, not hard rules: Claude can still skip a step.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>CLAUDE.md file:</strong> for rules that apply to every conversation in a project, not to one kind of task.</div>
+      <div><strong>Subagent:</strong> when the task should run in its own separate context, like a long code explanation.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">What is a skill in Claude Code?</p>
+        <details><summary>Answer</summary><p>A folder with a <code>SKILL.md</code> file: a short description, then instructions Claude follows for one kind of task. You write it once and reuse it.</p></details></li>
+      <li><p class="q">The few lines between the two <code>---</code> at the top of a skill file are called the _____.</p>
+        <details><summary>Answer</summary><p><strong>Frontmatter.</strong> It holds the skill's name and description.</p></details></li>
+      <li><p class="q">How does Claude decide when to use a skill?</p>
+        <ol class="options"><li>It runs every skill on every message</li><li>It reads all descriptions and opens the skill whose description matches your message</li><li>It only uses skills you start with a slash command</li><li>It picks one at random</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> Claude always reads every description, and opens a skill when your message matches it. C is tempting, but slash commands are only one of the two ways to start a skill.</p></details></li>
+      <li><p class="q">Is it true that Claude reads the full instructions of every skill when it starts?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> At the start it only reads each skill's name and description. The full instructions load only when the skill is used.</p></details></li>
+      <li><p class="q">Is it true that you can start a skill yourself with a slash command?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> Typing <code>/plugin-name:skill-name</code> starts it directly, without waiting for Claude to match it.</p></details></li>
+      <li><p class="q">Why does a skill read extra files, like a template, only when a step needs them?</p>
+        <details><summary>Answer</summary><p>To keep Claude's context small: you only pay for a file when it's actually needed.</p></details></li>
+      <li><p class="q">What happens if a skill's description is too vague?</p>
+        <ol class="options"><li>The skill fails to install</li><li>Claude asks you to rewrite it</li><li>Nothing, descriptions are optional</li><li>Claude often doesn't know when to use it</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> Claude matches your message against the description, so a vague one rarely matches. A is tempting, but the skill still installs fine.</p></details></li>
+      <li><p class="q">A _____ is a package that can hold several skills, so they install together.</p>
+        <details><summary>Answer</summary><p><strong>Plugin.</strong> It bundles skills (and other tools) into one installable package.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>How a subagent differs from a skill</li>
+      <li>How hooks make something happen every time, without relying on Claude</li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="skills.quiz.json">skills.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>

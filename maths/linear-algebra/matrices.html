@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Matrices · Lessons</title>
+  <meta name="lesson-subject" content="maths">
+  <meta name="lesson-topic" content="linear-algebra">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-26">
+  <meta name="lesson-source" content="general">
+  <meta name="lesson-quiz" content="matrices.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › Maths › Linear algebra</nav>
+    <h1><span class="icon">🧮</span>Matrices</h1>
+    <p class="lede">A grid of numbers you can add and multiply, like one big number.</p>
+    <div class="tags"><span>beginner</span><span>maths</span><span>2026-11-26</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>A matrix is a table of numbers arranged in rows and columns, like a small spreadsheet. It lets you store many related numbers together and work on all of them at once.</p>
+    <p>Matrices are used to solve systems of equations, move and rotate shapes in video games, and store data such as images. Once you know the rules, you can treat a whole table almost like a single number.</p>
+    <figure>
+      <svg viewBox="0 0 360 200" role="img" aria-label="A 2 by 3 matrix: 2 rows and 3 columns, with the first row highlighted">
+        <rect class="svg-hl" x="60" y="40" width="240" height="56" rx="8"/>
+        <g class="svg-box">
+          <rect x="70" y="46" width="64" height="44" rx="6"/><rect x="148" y="46" width="64" height="44" rx="6"/><rect x="226" y="46" width="64" height="44" rx="6"/>
+          <rect x="70" y="104" width="64" height="44" rx="6"/><rect x="148" y="104" width="64" height="44" rx="6"/><rect x="226" y="104" width="64" height="44" rx="6"/>
+        </g>
+        <g class="svg-text" text-anchor="middle">
+          <text x="102" y="74">4</text><text x="180" y="74">7</text><text x="258" y="74">1</text>
+          <text x="102" y="132">0</text><text x="180" y="132">2</text><text x="258" y="132">5</text>
+        </g>
+        <text class="svg-strong" x="20" y="74" text-anchor="middle">row 1</text>
+        <text class="svg-label" x="20" y="132" text-anchor="middle">row 2</text>
+        <g class="svg-label" text-anchor="middle">
+          <text x="102" y="30">col 1</text><text x="180" y="30">col 2</text><text x="258" y="30">col 3</text>
+        </g>
+        <text class="svg-label" x="180" y="182" text-anchor="middle">2 rows × 3 columns → a 2 × 3 matrix</text>
+      </svg>
+      <figcaption>Rows go across, columns go down. The size is always rows first.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>Matrix</dt><dd>A rectangular grid of numbers, written inside big brackets.</dd></div>
+      <div><dt>Entry</dt><dd>One single number inside the matrix (also called an element).</dd></div>
+      <div><dt>Size</dt><dd>Rows × columns: a 2 × 3 matrix has 2 rows and 3 columns.</dd></div>
+      <div><dt>Matrix addition</dt><dd>Adding two matrices of the same size, entry by entry.</dd></div>
+      <div><dt>Matrix multiplication</dt><dd>Combining two matrices by pairing a row of the first with a column of the second.</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li>Write the numbers in a grid. Rows go left to right, columns go top to bottom.</li>
+      <li>Name its size: rows first, then columns. Always in that order.</li>
+      <li>To <strong>add</strong> two matrices, they must have the same size. Add the entries that sit in the same place.</li>
+      <li>To multiply a matrix by a plain number, multiply <strong>every</strong> entry by that number.</li>
+      <li>To <strong>multiply</strong> A × B, the columns of A must equal the rows of B. Each entry of the result is one row of A "times" one column of B: multiply the pairs and add them up.</li>
+      <li>Order matters: A × B is usually <strong>not</strong> the same as B × A.</li>
+    </ol>
+    <figure>
+      <pre class="mermaid">
+flowchart LR
+  A["A is m × n"] --> Q{"n = rows of B?"}
+  B["B is n × p"] --> Q
+  Q -- yes --> R["A × B is m × p<br/>(the outer numbers)"]
+  Q -- no --> X["Can't multiply"]
+      </pre>
+      <figcaption>Before multiplying, check that the inner numbers match.</figcaption>
+    </figure>
+    <aside class="callout tip">
+      <strong>✅ Tip</strong>
+      <p>Write the sizes side by side: 2 × <u>3</u> and <u>3</u> × 4. If the inner numbers match, you can multiply, and the outer numbers (2 × 4) give the size of the result.</p>
+    </aside>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>Take two 2 × 2 matrices:</p>
+    <div class="math">$$A = \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix} \qquad B = \begin{pmatrix} 1 & 4 \\ 2 & 5 \end{pmatrix}$$</div>
+    <h3>Addition: same place, add</h3>
+    <div class="math">$$A + B = \begin{pmatrix} 2+1 & 1+4 \\ 0+2 & 3+5 \end{pmatrix} = \begin{pmatrix} 3 & 5 \\ 2 & 8 \end{pmatrix}$$</div>
+    <h3>Multiplication: row times column</h3>
+    <figure>
+      <svg viewBox="0 0 420 170" role="img" aria-label="Row 1 of A times column 1 of B gives the top-left entry 4">
+        <text class="svg-label" x="70" y="18" text-anchor="middle">A</text>
+        <text class="svg-label" x="200" y="18" text-anchor="middle">B</text>
+        <text class="svg-label" x="345" y="18" text-anchor="middle">A × B</text>
+        <rect class="svg-hl" x="22" y="30" width="96" height="44" rx="8"/>
+        <rect class="svg-hl" x="154" y="30" width="44" height="100" rx="8"/>
+        <g class="svg-text" text-anchor="middle">
+          <text x="46" y="58">2</text><text x="94" y="58">1</text>
+          <text x="46" y="114">0</text><text x="94" y="114">3</text>
+          <text x="176" y="58">1</text><text x="224" y="58">4</text>
+          <text x="176" y="114">2</text><text x="224" y="114">5</text>
+        </g>
+        <path class="svg-line" d="M18 32 q-8 48 0 96 M122 32 q8 48 0 96 M150 32 q-8 48 0 96 M252 32 q8 48 0 96"/>
+        <text class="svg-text" x="137" y="86" text-anchor="middle">×</text>
+        <text class="svg-text" x="275" y="86" text-anchor="middle">=</text>
+        <path class="svg-line" d="M300 32 q-8 48 0 96 M398 32 q8 48 0 96"/>
+        <rect class="svg-accent" x="304" y="34" width="40" height="40" rx="8"/>
+        <g class="svg-text" text-anchor="middle">
+          <text class="svg-strong" x="324" y="60">4</text><text x="372" y="58">13</text>
+          <text x="324" y="114">6</text><text x="372" y="114">15</text>
+        </g>
+        <text class="svg-label" x="210" y="160" text-anchor="middle">row 1 of A · column 1 of B = 2×1 + 1×2 = 4</text>
+      </svg>
+      <figcaption>Each entry of the result comes from one row of A and one column of B.</figcaption>
+    </figure>
+    <div class="math">$$A \times B = \begin{pmatrix} 2{\cdot}1 + 1{\cdot}2 & 2{\cdot}4 + 1{\cdot}5 \\ 0{\cdot}1 + 3{\cdot}2 & 0{\cdot}4 + 3{\cdot}5 \end{pmatrix} = \begin{pmatrix} 4 & 13 \\ 6 & 15 \end{pmatrix}$$</div>
+    <p>Now compute B × A the same way:</p>
+    <div class="math">$$B \times A = \begin{pmatrix} 2 & 13 \\ 4 & 17 \end{pmatrix} \neq A \times B$$</div>
+    <aside class="callout warning">
+      <strong>⚠️ Common mistake</strong>
+      <p>With normal numbers, 2 × 3 = 3 × 2. With matrices, swapping the order usually changes the answer, as you can see above.</p>
+    </aside>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>Stores many numbers in one neat object and handles them all with one operation.</li>
+        <li>Turns big systems of equations into one short line that computers solve fast.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>Multiplication is less intuitive than for normal numbers: sizes must match and order matters.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>Writing equations one by one:</strong> fine for 2 or 3 small equations, but it gets messy quickly as they grow.</div>
+      <div><strong>Vectors:</strong> a single row or column of numbers, enough when you only need a list rather than a full table.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">A matrix is a rectangular grid of numbers arranged in rows and _____.</p>
+        <details><summary>Answer</summary><p><strong>Columns.</strong> A matrix is organised in rows (across) and columns (down).</p></details></li>
+      <li><p class="q">A matrix has 2 rows and 3 columns. How do we write its size?</p>
+        <ol class="options"><li>3 × 2</li><li>2 × 3</li><li>6</li><li>2 + 3</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> The size is always written rows first, then columns. A is the tempting mistake of putting columns first.</p></details></li>
+      <li><p class="q">Each single number inside a matrix is called an _____.</p>
+        <details><summary>Answer</summary><p><strong>Entry.</strong> An entry (or element) is one number at one position in the grid.</p></details></li>
+      <li><p class="q">Is it true that you can add any two matrices, even if their sizes are different?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> Addition is done entry by entry, so both matrices need exactly the same number of rows and columns.</p></details></li>
+      <li><p class="q">How do you add two matrices of the same size?</p>
+        <details><summary>Answer</summary><p>You add the entries that are in the same position. For example, the top-left of the result is the top-left of the first plus the top-left of the second.</p></details></li>
+      <li><p class="q">What happens when you multiply a matrix by the number 3?</p>
+        <ol class="options"><li>Only the first row is multiplied by 3</li><li>The matrix gets 3 more rows</li><li>Every entry is multiplied by 3</li><li>Only the numbers on the diagonal are multiplied by 3</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> Multiplying by a plain number scales every entry. A is tempting, but the rule applies to the whole matrix, not one row.</p></details></li>
+      <li><p class="q">How do you find one entry of the product of two matrices?</p>
+        <details><summary>Answer</summary><p>You take one row of the first matrix and one column of the second, multiply the numbers pair by pair, and add the results.</p></details></li>
+      <li><p class="q">Is it true that to multiply A by B, the number of columns of A must equal the number of rows of B?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> Each row of A is paired with each column of B, so they must contain the same number of values.</p></details></li>
+      <li><p class="q">A is a 2 × 3 matrix and B is a 3 × 4 matrix. What is the size of A × B?</p>
+        <ol class="options"><li>3 × 3</li><li>2 × 3</li><li>4 × 2</li><li>2 × 4</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> The inner numbers (3 and 3) must match, and the outer numbers (2 and 4) give the size of the result. A is tempting, but 3 × 3 uses the inner numbers instead of the outer ones.</p></details></li>
+      <li><p class="q">Is it true that A × B always gives the same result as B × A?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> Matrix multiplication usually depends on order; in the example, A × B and B × A gave different matrices.</p></details></li>
+      <li><p class="q">Why are matrices useful?</p>
+        <details><summary>Answer</summary><p>They hold many related numbers in one object and let you work on all of them at once, which helps solve systems of equations, move shapes in graphics, and store data.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>The identity matrix and the inverse of a matrix</li>
+      <li>The determinant of a matrix</li>
+      <li>Using matrices to solve systems of equations</li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="matrices.quiz.json">matrices.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>

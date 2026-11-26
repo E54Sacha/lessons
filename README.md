@@ -4,34 +4,24 @@ Short, beginner-friendly lessons with quizzes, written by the `tutor` subagent o
 
 The quizzes are also the question bank for my CS revision game ([cs-quiz-app](https://github.com/E54Sacha/cs-quiz-app)).
 
+## Read the lessons
+
+Open **[the lessons home page](https://e54sacha.github.io/lessons/)** (or `index.html` locally). Each lesson is an illustrated web page: drawings, diagrams, formulas, tip boxes and a quiz with hidden answers.
+
 ## Structure
 
 ```
-<subject>/<topic>/<lesson>.md          ← the lesson, readable on GitHub
-<subject>/<topic>/<lesson>.quiz.json   ← the same quiz, structured for the game
-subjects.json                          ← the allowed subjects
-schema/quiz.schema.json                ← the format of every .quiz.json
+index.html                               ← home page, rebuilt automatically with every new lesson
+<subject>/<topic>/<lesson>.html          ← the lesson page
+<subject>/<topic>/<lesson>.quiz.json     ← the same quiz, structured for the game
+assets/lesson.css, assets/lesson.js      ← shared style (light and dark mode) and script (diagrams, formulas)
+subjects.json                            ← the allowed subjects
+schema/quiz.schema.json                  ← the format of every .quiz.json
 ```
 
 Subjects: `cs`, `maths`, `physics`, `finance`, `general-knowledge` (see [subjects.json](subjects.json)).
 
-## Lesson format
-
-Each `.md` file starts with a metadata header:
-
-```yaml
----
-title: Claude Code subagents
-subject: cs
-topic: claude-code
-difficulty: beginner
-created: 2026-11-26
-source: claude-dev-toolkit      # the project it came from, or "general"
-quiz: subagents.quiz.json
----
-```
-
-Then: The idea · Key words · How it works · Example · Why use it · Other ways · Quiz.
+Diagrams use [Mermaid](https://mermaid.js.org/) and formulas use [KaTeX](https://katex.org/), both loaded from a CDN with integrity checks.
 
 ## Quiz format (for the game)
 

@@ -1,0 +1,144 @@
+/* Shared style for every lesson page. Lessons link it as ../../assets/lesson.css */
+:root {
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --surface-2: #f3f1ec;
+  --text: #1f2328;
+  --muted: #5f6670;
+  --border: #e3e0d8;
+  --accent: #3b5bdb;
+  --accent-soft: #e7ecff;
+  --note: #3b5bdb;  --note-bg: #eef2ff;
+  --tip: #2b8a3e;   --tip-bg: #ebfbee;
+  --warn: #c2410c;  --warn-bg: #fff4e6;
+  --pro: #2b8a3e;
+  --con: #c2410c;
+  --hl: #ffd43b;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.05);
+  --radius: 14px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161a; --surface: #1c1f24; --surface-2: #23272e; --text: #e6e6e6; --muted: #9aa1ab;
+    --border: #30353d; --accent: #7c9cff; --accent-soft: #232b45;
+    --note: #7c9cff; --note-bg: #1f2640; --tip: #69db7c; --tip-bg: #1a2b1f; --warn: #ffa94d; --warn-bg: #2f2418;
+    --pro: #69db7c; --con: #ffa94d; --hl: #b38f00; --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14161a; --surface: #1c1f24; --surface-2: #23272e; --text: #e6e6e6; --muted: #9aa1ab;
+  --border: #30353d; --accent: #7c9cff; --accent-soft: #232b45;
+  --note: #7c9cff; --note-bg: #1f2640; --tip: #69db7c; --tip-bg: #1a2b1f; --warn: #ffa94d; --warn-bg: #2f2418;
+  --pro: #69db7c; --con: #ffa94d; --hl: #b38f00; --shadow: none;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 17px/1.65 var(--font);
+}
+a { color: var(--accent); }
+main, .hero-inner, footer { max-width: 780px; margin: 0 auto; padding: 0 16px; }
+
+/* Header */
+.hero { background: linear-gradient(180deg, var(--accent-soft), var(--bg)); padding: 28px 0 24px; border-bottom: 1px solid var(--border); }
+.crumbs { font-size: 14px; color: var(--muted); }
+.crumbs a { color: var(--muted); text-decoration: none; }
+.crumbs a:hover { color: var(--accent); }
+.hero h1 { font-size: clamp(30px, 6vw, 42px); line-height: 1.15; margin: 10px 0 8px; letter-spacing: -.02em; }
+.hero h1 .icon { margin-right: 6px; }
+.lede { font-size: 19px; color: var(--muted); margin: 0 0 14px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tags span { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+
+/* Sections */
+main { padding-top: 8px; padding-bottom: 40px; }
+section { margin: 36px 0; }
+h2 { font-size: 24px; margin: 0 0 12px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+h2 .icon { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--accent-soft); font-size: 19px; }
+h3 { font-size: 18px; margin: 20px 0 6px; }
+p { margin: 0 0 12px; }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: 1px 6px; border-radius: 6px; }
+pre { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; overflow-x: auto; font: 14px/1.55 var(--mono); }
+pre code { background: none; padding: 0; }
+.comment { color: var(--muted); font-style: italic; }
+
+/* Key words */
+.terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 0; }
+.terms > div { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; box-shadow: var(--shadow); }
+.terms dt { font-weight: 700; color: var(--accent); margin-bottom: 2px; }
+.terms dd { margin: 0; font-size: 15px; color: var(--text); }
+
+/* Steps */
+.steps { list-style: none; counter-reset: step; padding: 0; margin: 0 0 16px; }
+.steps li { counter-increment: step; position: relative; padding: 4px 0 12px 46px; }
+.steps li::before {
+  content: counter(step); position: absolute; left: 0; top: 2px; width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--accent); color: var(--surface); font-weight: 700; font-size: 15px;
+}
+.steps li:not(:last-child)::after { content: ""; position: absolute; left: 15px; top: 36px; bottom: 0; width: 2px; background: var(--border); }
+
+/* Illustrations */
+figure { margin: 20px 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); text-align: center; }
+figure svg { max-width: 100%; height: auto; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.mermaid { background: none; border: none; text-align: center; }
+/* Classes for hand-drawn SVGs: they follow light/dark mode */
+.svg-box { fill: var(--surface-2); stroke: var(--border); stroke-width: 2; }
+.svg-accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.svg-hl { fill: var(--hl); fill-opacity: .45; stroke: none; }
+.svg-line { stroke: var(--muted); stroke-width: 2; fill: none; }
+.svg-arrow { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+.svg-text { fill: var(--text); font: 16px var(--font); }
+.svg-label { fill: var(--muted); font: 13px var(--font); }
+.svg-strong { fill: var(--accent); font: 700 16px var(--font); }
+
+/* Math */
+.math { overflow-x: auto; padding: 4px 0; }
+
+/* Callouts */
+.callout { border-left: 4px solid var(--note); background: var(--note-bg); border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px; margin: 18px 0; }
+.callout > strong:first-child { display: block; color: var(--note); margin-bottom: 2px; }
+.callout p:last-child { margin: 0; }
+.callout.tip { border-color: var(--tip); background: var(--tip-bg); }
+.callout.tip > strong:first-child { color: var(--tip); }
+.callout.warning { border-color: var(--warn); background: var(--warn-bg); }
+.callout.warning > strong:first-child { color: var(--warn); }
+
+/* Pros and cons */
+.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .pros-cons { grid-template-columns: 1fr; } }
+.pros-cons > div { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; }
+.pros-cons h3 { margin-top: 0; }
+.pros-cons .pros h3 { color: var(--pro); }
+.pros-cons .cons h3 { color: var(--con); }
+.pros-cons ul { margin: 0; padding-left: 20px; }
+
+/* Other ways */
+.alternatives { display: grid; gap: 10px; }
+.alternatives > div { background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius); padding: 10px 14px; }
+
+/* Quiz */
+.quiz { list-style: none; counter-reset: q; padding: 0; margin: 0; display: grid; gap: 12px; }
+.quiz > li { counter-increment: q; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+.quiz .q { font-weight: 600; margin: 0 0 8px; }
+.quiz .q::before { content: counter(q) ". "; color: var(--accent); }
+.quiz .options { list-style: upper-alpha; margin: 0 0 8px; padding-left: 26px; }
+.quiz .options li { padding: 2px 0; }
+.quiz details { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 4px; }
+.quiz summary { cursor: pointer; color: var(--accent); font-size: 15px; font-weight: 600; }
+.quiz details p { margin: 8px 0 0; font-size: 15px; }
+.quiz-tools { margin: 0 0 12px; }
+.quiz-tools button { font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+
+/* Index page */
+.subject { margin: 32px 0; }
+.lesson-list { list-style: none; padding: 0; display: grid; gap: 10px; }
+.lesson-list a { display: block; text-decoration: none; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; box-shadow: var(--shadow); }
+.lesson-list a:hover { border-color: var(--accent); }
+.lesson-list .meta { font-size: 13px; color: var(--muted); }
+
+footer { color: var(--muted); font-size: 14px; padding-top: 16px; padding-bottom: 40px; border-top: 1px solid var(--border); }

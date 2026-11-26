@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude Code subagents · Lessons</title>
+  <meta name="lesson-subject" content="cs">
+  <meta name="lesson-topic" content="claude-code">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-26">
+  <meta name="lesson-source" content="claude-dev-toolkit">
+  <meta name="lesson-quiz" content="subagents.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › CS › Claude Code</nav>
+    <h1><span class="icon">🤖</span>Claude Code subagents</h1>
+    <p class="lede">Helper Claudes that do one job on their own, then hand back a short report.</p>
+    <div class="tags"><span>beginner</span><span>cs</span><span>2026-11-26</span><span>example: claude-dev-toolkit</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>A subagent is a helper assistant that the main Claude can hand a job to. Each subagent has its own instructions, its own allowed tools and its own memory. This keeps the main conversation tidy and makes sure some jobs are always done the same way.</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>A manager gives one task to a specialist colleague. The specialist works alone at their own desk, then hands back a short report. The manager never sees the messy notes.</p>
+    </aside>
+    <figure>
+      <svg viewBox="0 0 440 220" role="img" aria-label="The main Claude sends a task to a subagent with its own fresh memory and limited tools, and gets back one short report">
+        <rect class="svg-accent" x="16" y="40" width="160" height="140" rx="12"/>
+        <text class="svg-strong" x="96" y="66" text-anchor="middle">Main Claude</text>
+        <rect class="svg-box" x="32" y="80" width="128" height="20" rx="4"/>
+        <rect class="svg-box" x="32" y="106" width="128" height="20" rx="4"/>
+        <rect class="svg-box" x="32" y="132" width="96" height="20" rx="4"/>
+        <text class="svg-label" x="96" y="172" text-anchor="middle">your whole chat</text>
+        <rect class="svg-box" x="264" y="40" width="160" height="140" rx="12"/>
+        <text class="svg-strong" x="344" y="66" text-anchor="middle">Subagent</text>
+        <rect class="svg-box" x="280" y="80" width="128" height="40" rx="4" stroke-dasharray="5 4"/>
+        <text class="svg-label" x="344" y="104" text-anchor="middle">fresh, empty memory</text>
+        <text class="svg-label" x="344" y="144" text-anchor="middle">tools: Read · Write</text>
+        <text class="svg-label" x="344" y="164" text-anchor="middle">(only what its job needs)</text>
+        <path class="svg-arrow" d="M180 88 H258 M250 82 l8 6 -8 6"/>
+        <text class="svg-text" x="220" y="78" text-anchor="middle">task</text>
+        <path class="svg-arrow" d="M260 140 H184 M192 134 l-8 6 8 6"/>
+        <text class="svg-text" x="222" y="162" text-anchor="middle">report</text>
+        <text class="svg-label" x="220" y="208" text-anchor="middle">The subagent sees only its instructions and the task message.</text>
+      </svg>
+      <figcaption>Only the task goes in, and only the report comes back.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>Subagent</dt><dd>A separate Claude with its own role, started by the main Claude to do one task.</dd></div>
+      <div><dt>Frontmatter</dt><dd>The block between the two <code>---</code> lines at the top of the file, holding settings like name and tools.</dd></div>
+      <div><dt>Description</dt><dd>A sentence that tells the main Claude <em>when</em> to call this subagent.</dd></div>
+      <div><dt>System prompt</dt><dd>The text under the frontmatter: the subagent's permanent job description.</dd></div>
+      <div><dt>Context window</dt><dd>The "working memory" of one conversation. A subagent starts with a fresh, empty one.</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li>You write a Markdown file: frontmatter on top, instructions below.</li>
+      <li>Claude Code reads the name and description of every subagent when it starts.</li>
+      <li>When your request matches a description, the main Claude delegates the task to that subagent.</li>
+      <li>The subagent starts fresh: it only sees its system prompt and the task message, not your whole chat.</li>
+      <li>It works using only the tools it is allowed, then sends one final report back.</li>
+      <li>The main Claude reads that report and continues talking with you.</li>
+    </ol>
+    <figure>
+      <pre class="mermaid">
+sequenceDiagram
+  participant You
+  participant Main as Main Claude
+  participant Sub as Subagent
+  You->>Main: "Explain how this works"
+  Main->>Sub: Task message (all the details it needs)
+  Note over Sub: Reads files, works alone
+  Sub-->>Main: One short report
+  Main->>You: Answer, using the report
+      </pre>
+      <figcaption>The subagent's work stays in its own memory.</figcaption>
+    </figure>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>The <code>tutor</code> subagent writes beginner lessons like this one. Its description lists phrases like "explain this", so the main Claude knows when to call it. It may only read, search and write files, so it cannot run commands.</p>
+<pre><code>---
+name: tutor                      <span class="comment"># how the subagent is identified</span>
+description: Teaches a beginner any topic ... Use when the user
+  asks to explain, teach, or walk through code ...   <span class="comment"># when to call it</span>
+tools: Read, Grep, Glob, Write   <span class="comment"># only these tools, no shell commands</span>
+---
+
+You are a patient tutor for a beginner student ...
+                                 <span class="comment"># system prompt starts here</span></code></pre>
+    <aside class="callout warning">
+      <strong>⚠️ Common mistake</strong>
+      <p>Assuming the subagent knows what you said earlier. It doesn't: put every detail it needs in the task message.</p>
+    </aside>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>The main conversation stays clean: the subagent's file reading stays in its own memory.</li>
+        <li>A specialist job is done the same way every time, with the same rules.</li>
+        <li>Limiting tools makes it safer: a helper that can't run commands can't break much.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>The subagent doesn't see your earlier chat, so the task message must contain everything.</li>
+        <li>A vague description means it may be called at the wrong time, or never.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>Skill:</strong> when you want extra instructions loaded into the <em>main</em> conversation instead of a separate helper.</div>
+      <div><strong>Just asking the main Claude:</strong> fine for a quick one-off task that needs no special rules.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">What is a subagent in Claude Code?</p>
+        <details><summary>Answer</summary><p>A separate Claude with its own role, instructions and tools, that the main Claude can hand one task to.</p></details></li>
+      <li><p class="q">A subagent's settings, like its name and tools, go in the _____, the block between the two <code>---</code> lines.</p>
+        <details><summary>Answer</summary><p><strong>Frontmatter.</strong> It holds the settings; the instructions come after it.</p></details></li>
+      <li><p class="q">How does the main Claude decide which subagent to call?</p>
+        <ol class="options"><li>It always calls the first subagent in the folder</li><li>It asks you to pick one every time</li><li>It compares your request with each subagent's description</li><li>It calls every subagent and keeps the best answer</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> The description says when to use the subagent. D is tempting, but calling every subagent would waste time and mix results.</p></details></li>
+      <li><p class="q">Is it true that Claude still calls a subagent at the right moments, even if its description is vague?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> A vague description makes Claude call it for the wrong tasks, or not call it at all.</p></details></li>
+      <li><p class="q">The instructions under the frontmatter are called the subagent's _____ prompt.</p>
+        <details><summary>Answer</summary><p><strong>System.</strong> It's the subagent's permanent job description, used every time it runs.</p></details></li>
+      <li><p class="q">Why does a subagent start with an empty context window?</p>
+        <details><summary>Answer</summary><p>So it isn't cluttered by the main chat, and its own work (like reading many files) doesn't fill up the main conversation.</p></details></li>
+      <li><p class="q">Is it true that a subagent can see everything you said earlier in your chat with the main Claude?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> It only sees its system prompt and the task message, so the task message must contain every detail it needs.</p></details></li>
+      <li><p class="q">Why would you limit the tools a subagent can use?</p>
+        <ol class="options"><li>For safety and focus: it can only do what its job needs</li><li>Because subagents can't use more than four tools</li><li>To make its answers longer</li><li>Tools only work in the main conversation</li></ol>
+        <details><summary>Answer</summary><p><strong>A.</strong> A helper that can only read files can't accidentally run a dangerous command. B is wrong: there's no four-tool limit.</p></details></li>
+      <li><p class="q">Is it true that a subagent sends one final report back to the main Claude when it finishes?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> The main Claude reads that report, then continues talking with you.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="noticing">
+    <h2><span class="icon">🔎</span>Things worth noticing</h2>
+    <p>The tutor's instructions say "write only inside the lessons repo", but the Write tool itself can write anywhere. That limit is a written rule, not a technical lock.</p>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>How Claude Code skills differ from subagents</li>
+      <li>How tool permissions work in Claude Code</li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="subagents.quiz.json">subagents.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>
