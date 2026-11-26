@@ -3,6 +3,7 @@
     "cs": "Computer science: programming, tools, algorithms, systems, AI tooling",
     "maths": "Mathematics: algebra, analysis, probability, discrete maths",
     "physics": "Physics: mechanics, electricity, waves, thermodynamics",
+    "chemistry": "Chemistry: atoms, elements, bonds, reactions, acids and bases",
     "finance": "Finance: markets, trading, accounting, personal finance",
     "general-knowledge": "General knowledge: history, geography, science facts, culture"
   }

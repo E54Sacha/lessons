@@ -19,7 +19,7 @@ subjects.json                            ← the allowed subjects
 schema/quiz.schema.json                  ← the format of every .quiz.json
 ```
 
-Subjects: `cs`, `maths`, `physics`, `finance`, `general-knowledge` (see [subjects.json](subjects.json)).
+Subjects: `cs`, `maths`, `physics`, `chemistry`, `finance`, `general-knowledge` (see [subjects.json](subjects.json)).
 
 Diagrams are plain HTML/CSS (the illustration kit in `assets/lesson.css`) with [Font Awesome](https://fontawesome.com/) icons; formulas use [KaTeX](https://katex.org/). Both are loaded from a CDN with integrity checks.
 
