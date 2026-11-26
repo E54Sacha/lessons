@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lesson quiz",
+  "type": "object",
+  "required": ["lesson", "title", "subject", "topic", "difficulty", "created", "questions"],
+  "properties": {
+    "lesson": { "type": "string", "description": "subject/topic/slug, same as the Markdown file path without .md" },
+    "title": { "type": "string" },
+    "subject": { "type": "string", "description": "A key of subjects.json" },
+    "topic": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "difficulty": { "enum": ["beginner", "intermediate", "advanced"] },
+    "created": { "type": "string", "format": "date" },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "question", "answer", "explanation"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^q[0-9]+$" },
+          "type": { "enum": ["open", "true_false", "multiple_choice", "fill_blank"] },
+          "question": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" }, "minItems": 4, "maxItems": 4, "description": "multiple_choice only" },
+          "answer": { "description": "open: model answer (string). true_false: boolean. multiple_choice: index of the correct option (0-3). fill_blank: the missing word (string)." },
+          "accept": { "type": "array", "items": { "type": "string" }, "description": "fill_blank only: other accepted spellings" },
+          "explanation": { "type": "string", "description": "Why the answer is right (and, for multiple choice, why the most tempting wrong option is wrong)" }
+        }
+      }
+    }
+  }
+}

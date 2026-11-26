@@ -1,0 +1,19 @@
+{
+  "lesson": "cs/claude-code/subagents",
+  "title": "Claude Code subagents",
+  "subject": "cs",
+  "topic": "claude-code",
+  "difficulty": "beginner",
+  "created": "2026-11-26",
+  "questions": [
+    { "id": "q1", "type": "open", "question": "What is a subagent in Claude Code?", "answer": "A separate Claude with its own role, instructions and tools, that the main Claude can hand one task to.", "explanation": "It works alone, then hands back a short report." },
+    { "id": "q2", "type": "fill_blank", "question": "A subagent's settings, like its name and tools, go in the _____, the block between the two --- lines.", "answer": "frontmatter", "accept": ["front matter", "front-matter"], "explanation": "It holds the settings; the instructions come after it." },
+    { "id": "q3", "type": "multiple_choice", "question": "How does the main Claude decide which subagent to call?", "options": ["It always calls the first subagent in the folder", "It asks you to pick one every time", "It compares your request with each subagent's description", "It calls every subagent and keeps the best answer"], "answer": 2, "explanation": "The description says when to use the subagent. Calling every subagent would waste time and mix results." },
+    { "id": "q4", "type": "true_false", "question": "Is it true that Claude still calls a subagent at the right moments, even if its description is vague?", "answer": false, "explanation": "A vague description makes Claude call it for the wrong tasks, or not call it at all." },
+    { "id": "q5", "type": "fill_blank", "question": "The instructions under the frontmatter are called the subagent's _____ prompt.", "answer": "system", "accept": [], "explanation": "It's the subagent's permanent job description, used every time it runs." },
+    { "id": "q6", "type": "open", "question": "Why does a subagent start with an empty context window?", "answer": "So it isn't cluttered by the main chat, and its own work doesn't fill up the main conversation.", "explanation": "For example, reading many files stays in the subagent's memory, not yours." },
+    { "id": "q7", "type": "true_false", "question": "Is it true that a subagent can see everything you said earlier in your chat with the main Claude?", "answer": false, "explanation": "It only sees its system prompt and the task message, so the task message must contain every detail it needs." },
+    { "id": "q8", "type": "multiple_choice", "question": "Why would you limit the tools a subagent can use?", "options": ["For safety and focus: it can only do what its job needs", "Because subagents can't use more than four tools", "To make its answers longer", "Tools only work in the main conversation"], "answer": 0, "explanation": "A helper that can only read files can't accidentally run a dangerous command. There's no four-tool limit." },
+    { "id": "q9", "type": "true_false", "question": "Is it true that a subagent sends one final report back to the main Claude when it finishes?", "answer": true, "explanation": "The main Claude reads that report, then continues talking with you." }
+  ]
+}

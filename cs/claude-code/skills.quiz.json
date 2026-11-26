@@ -1,0 +1,18 @@
+{
+  "lesson": "cs/claude-code/skills",
+  "title": "Claude Code skills",
+  "subject": "cs",
+  "topic": "claude-code",
+  "difficulty": "beginner",
+  "created": "2026-11-26",
+  "questions": [
+    { "id": "q1", "type": "open", "question": "What is a skill in Claude Code?", "answer": "A folder with a SKILL.md file: a short description, then instructions Claude follows for one kind of task.", "explanation": "You write it once and reuse it, instead of repeating the same instructions every time." },
+    { "id": "q2", "type": "fill_blank", "question": "The few lines between the two --- at the top of a skill file are called the _____.", "answer": "frontmatter", "accept": ["front matter", "front-matter"], "explanation": "It holds the skill's name and description." },
+    { "id": "q3", "type": "multiple_choice", "question": "How does Claude decide when to use a skill?", "options": ["It runs every skill on every message", "It reads all descriptions and opens the skill whose description matches your message", "It only uses skills you start with a slash command", "It picks one at random"], "answer": 1, "explanation": "Claude always reads every description, and opens a skill when your message matches it. Slash commands are only one of the two ways to start a skill." },
+    { "id": "q4", "type": "true_false", "question": "Is it true that Claude reads the full instructions of every skill when it starts?", "answer": false, "explanation": "At the start it only reads each skill's name and description. The full instructions load only when the skill is used." },
+    { "id": "q5", "type": "true_false", "question": "Is it true that you can start a skill yourself with a slash command?", "answer": true, "explanation": "Typing /plugin-name:skill-name starts it directly, without waiting for Claude to match it." },
+    { "id": "q6", "type": "open", "question": "Why does a skill read extra files, like a template, only when a step needs them?", "answer": "To keep Claude's context small: you only pay for a file when it's actually needed.", "explanation": "Loading only what's needed keeps many skills cheap to have installed." },
+    { "id": "q7", "type": "multiple_choice", "question": "What happens if a skill's description is too vague?", "options": ["The skill fails to install", "Claude asks you to rewrite it", "Nothing, descriptions are optional", "Claude often doesn't know when to use it"], "answer": 3, "explanation": "Claude matches your message against the description, so a vague one rarely matches. The skill still installs fine." },
+    { "id": "q8", "type": "fill_blank", "question": "A _____ is a package that can hold several skills, so they install together.", "answer": "plugin", "accept": ["plug-in"], "explanation": "It bundles skills (and other tools) into one installable package." }
+  ]
+}
