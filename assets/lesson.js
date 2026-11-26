@@ -3,7 +3,7 @@
   const dark = document.documentElement.dataset.theme === "dark" ||
     (document.documentElement.dataset.theme !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
 
-  if (window.mermaid) {
+  if (window.mermaid) { // optional: only pages that load Mermaid
     mermaid.initialize({ startOnLoad: true, theme: dark ? "dark" : "neutral", fontFamily: "system-ui, sans-serif" });
   }
 

@@ -11,6 +11,7 @@
   <meta name="lesson-source" content="claude-dev-toolkit">
   <meta name="lesson-quiz" content="skills.quiz.json">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
   <link rel="stylesheet" href="../../assets/lesson.css">
 </head>
 <body>
@@ -31,18 +32,12 @@
       <strong>💡 Think of it like this</strong>
       <p>A skill is a recipe card. Claude doesn't memorize every recipe: it glances at the card titles, and only reads a full card when it's time to cook that dish.</p>
     </aside>
-    <figure>
-      <svg viewBox="0 0 420 210" role="img" aria-label="Three layers: descriptions always loaded, instructions loaded when the skill starts, extra files loaded only when a step needs them">
-        <rect class="svg-accent" x="20" y="20" width="380" height="50" rx="10"/>
-        <text class="svg-strong" x="36" y="42">1. Name + description</text>
-        <text class="svg-label" x="36" y="60">always loaded · a few lines per skill</text>
-        <rect class="svg-box" x="50" y="82" width="350" height="50" rx="10"/>
-        <text class="svg-text" x="66" y="104">2. Full instructions (SKILL.md)</text>
-        <text class="svg-label" x="66" y="122">loaded when your message matches</text>
-        <rect class="svg-box" x="80" y="144" width="320" height="50" rx="10" stroke-dasharray="6 4"/>
-        <text class="svg-text" x="96" y="166">3. Extra files (templates…)</text>
-        <text class="svg-label" x="96" y="184">loaded only when a step needs them</text>
-      </svg>
+    <figure class="illus">
+      <div class="layers">
+        <div class="layer c-blue"><i class="fa-solid fa-tags"></i><div><strong>1 · Name + description</strong><span>Always loaded · a few lines per skill</span></div></div>
+        <div class="layer c-purple"><i class="fa-solid fa-file-lines"></i><div><strong>2 · Full instructions (SKILL.md)</strong><span>Loaded when your message matches the description</span></div></div>
+        <div class="layer c-gray dashed"><i class="fa-solid fa-folder-open"></i><div><strong>3 · Extra files (templates…)</strong><span>Loaded only when a step needs them</span></div></div>
+      </div>
       <figcaption>Each layer loads only when it's needed, so having many skills costs very little.</figcaption>
     </figure>
   </section>
@@ -67,19 +62,14 @@
       <li>Claude follows the instructions step by step, reading extra files only when a step needs them.</li>
       <li>You can also skip the matching and start a skill directly with its slash command.</li>
     </ol>
-    <figure>
-      <pre class="mermaid">
-sequenceDiagram
-  participant You
-  participant Claude
-  participant Skill as Skill folder
-  Note over Claude: Knows only the descriptions
-  You->>Claude: "I have an idea for a website"
-  Claude->>Skill: Matches a description, opens SKILL.md
-  Skill-->>Claude: Full instructions
-  Claude->>You: Follows them (asks questions…)
-  Claude->>Skill: Needs the template, reads it
-      </pre>
+    <figure class="illus">
+      <div class="timeline">
+        <div class="stop c-blue active"><i class="fa-solid fa-comment"></i>You send a message</div>
+        <div class="stop c-blue"><i class="fa-solid fa-magnifying-glass"></i>Claude compares it with the descriptions</div>
+        <div class="stop c-purple"><i class="fa-solid fa-file-lines"></i>A match: it opens SKILL.md</div>
+        <div class="stop c-purple"><i class="fa-solid fa-list-check"></i>It follows the steps</div>
+        <div class="stop c-gray"><i class="fa-solid fa-folder-open"></i>Reads a template only if needed</div>
+      </div>
       <figcaption>The skill's content enters the conversation only when it's used.</figcaption>
     </figure>
   </section>
@@ -159,7 +149,6 @@ description: Turns a project idea into a REQUIREMENTS.md ...
 
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
 <script src="../../assets/lesson.js"></script>
 </body>
 </html>

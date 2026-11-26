@@ -11,6 +11,7 @@
   <meta name="lesson-source" content="general">
   <meta name="lesson-quiz" content="matrices.quiz.json">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
   <link rel="stylesheet" href="../../assets/lesson.css">
 </head>
 <body>
@@ -28,7 +29,7 @@
     <h2><span class="icon">💡</span>The idea</h2>
     <p>A matrix is a table of numbers arranged in rows and columns, like a small spreadsheet. It lets you store many related numbers together and work on all of them at once.</p>
     <p>Matrices are used to solve systems of equations, move and rotate shapes in video games, and store data such as images. Once you know the rules, you can treat a whole table almost like a single number.</p>
-    <figure>
+    <figure class="illus">
       <svg viewBox="0 0 360 200" role="img" aria-label="A 2 by 3 matrix: 2 rows and 3 columns, with the first row highlighted">
         <rect class="svg-hl" x="60" y="40" width="240" height="56" rx="8"/>
         <g class="svg-box">
@@ -71,14 +72,19 @@
       <li>To <strong>multiply</strong> A × B, the columns of A must equal the rows of B. Each entry of the result is one row of A "times" one column of B: multiply the pairs and add them up.</li>
       <li>Order matters: A × B is usually <strong>not</strong> the same as B × A.</li>
     </ol>
-    <figure>
-      <pre class="mermaid">
-flowchart LR
-  A["A is m × n"] --> Q{"n = rows of B?"}
-  B["B is n × p"] --> Q
-  Q -- yes --> R["A × B is m × p<br/>(the outer numbers)"]
-  Q -- no --> X["Can't multiply"]
-      </pre>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-table-cells"></i><span class="tag">A</span>m × <u>n</u></div>
+        <div class="node c-purple"><i class="fa-solid fa-table-cells"></i><span class="tag">B</span><u>n</u> × p</div>
+      </div>
+      <div class="flow vertical" style="margin-top:6px">
+        <div class="arrow"></div>
+        <div class="node decision c-gray">Do the inner numbers match?</div>
+      </div>
+      <div class="branches" style="margin-top:14px">
+        <div class="branch"><span class="chip c-green">yes</span><div class="node c-green"><i class="fa-solid fa-check"></i>A × B is m × p<small>the outer numbers</small></div></div>
+        <div class="branch"><span class="chip c-red">no</span><div class="node c-red"><i class="fa-solid fa-xmark"></i>You can't multiply them</div></div>
+      </div>
       <figcaption>Before multiplying, check that the inner numbers match.</figcaption>
     </figure>
     <aside class="callout tip">
@@ -94,7 +100,7 @@ flowchart LR
     <h3>Addition: same place, add</h3>
     <div class="math">$$A + B = \begin{pmatrix} 2+1 & 1+4 \\ 0+2 & 3+5 \end{pmatrix} = \begin{pmatrix} 3 & 5 \\ 2 & 8 \end{pmatrix}$$</div>
     <h3>Multiplication: row times column</h3>
-    <figure>
+    <figure class="illus">
       <svg viewBox="0 0 420 170" role="img" aria-label="Row 1 of A times column 1 of B gives the top-left entry 4">
         <text class="svg-label" x="70" y="18" text-anchor="middle">A</text>
         <text class="svg-label" x="200" y="18" text-anchor="middle">B</text>
@@ -156,6 +162,7 @@ flowchart LR
       <li><p class="q">A matrix is a rectangular grid of numbers arranged in rows and _____.</p>
         <details><summary>Answer</summary><p><strong>Columns.</strong> A matrix is organised in rows (across) and columns (down).</p></details></li>
       <li><p class="q">A matrix has 2 rows and 3 columns. How do we write its size?</p>
+        <div class="q-figure"><svg viewBox="0 0 260 130" role="img" aria-label="A grid of numbers with 2 rows and 3 columns"><g fill="#5b7fe0" fill-opacity="0.16" stroke="#5b7fe0" stroke-width="2"><rect x="40" y="14" width="56" height="44" rx="6"/><rect x="102" y="14" width="56" height="44" rx="6"/><rect x="164" y="14" width="56" height="44" rx="6"/><rect x="40" y="66" width="56" height="44" rx="6"/><rect x="102" y="66" width="56" height="44" rx="6"/><rect x="164" y="66" width="56" height="44" rx="6"/></g><g font-family="system-ui,sans-serif" font-size="18" font-weight="600" fill="currentColor" text-anchor="middle"><text x="68" y="42">4</text><text x="130" y="42">7</text><text x="192" y="42">1</text><text x="68" y="94">0</text><text x="130" y="94">2</text><text x="192" y="94">5</text></g><path d="M34 10 q-10 54 0 104 M226 10 q10 54 0 104" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></div>
         <ol class="options"><li>3 × 2</li><li>2 × 3</li><li>6</li><li>2 + 3</li></ol>
         <details><summary>Answer</summary><p><strong>B.</strong> The size is always written rows first, then columns. A is the tempting mistake of putting columns first.</p></details></li>
       <li><p class="q">Each single number inside a matrix is called an _____.</p>
@@ -195,7 +202,6 @@ flowchart LR
 
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
 <script src="../../assets/lesson.js"></script>
 </body>
 </html>

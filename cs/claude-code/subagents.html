@@ -11,6 +11,7 @@
   <meta name="lesson-source" content="claude-dev-toolkit">
   <meta name="lesson-quiz" content="subagents.quiz.json">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
   <link rel="stylesheet" href="../../assets/lesson.css">
 </head>
 <body>
@@ -31,27 +32,16 @@
       <strong>💡 Think of it like this</strong>
       <p>A manager gives one task to a specialist colleague. The specialist works alone at their own desk, then hands back a short report. The manager never sees the messy notes.</p>
     </aside>
-    <figure>
-      <svg viewBox="0 0 440 220" role="img" aria-label="The main Claude sends a task to a subagent with its own fresh memory and limited tools, and gets back one short report">
-        <rect class="svg-accent" x="16" y="40" width="160" height="140" rx="12"/>
-        <text class="svg-strong" x="96" y="66" text-anchor="middle">Main Claude</text>
-        <rect class="svg-box" x="32" y="80" width="128" height="20" rx="4"/>
-        <rect class="svg-box" x="32" y="106" width="128" height="20" rx="4"/>
-        <rect class="svg-box" x="32" y="132" width="96" height="20" rx="4"/>
-        <text class="svg-label" x="96" y="172" text-anchor="middle">your whole chat</text>
-        <rect class="svg-box" x="264" y="40" width="160" height="140" rx="12"/>
-        <text class="svg-strong" x="344" y="66" text-anchor="middle">Subagent</text>
-        <rect class="svg-box" x="280" y="80" width="128" height="40" rx="4" stroke-dasharray="5 4"/>
-        <text class="svg-label" x="344" y="104" text-anchor="middle">fresh, empty memory</text>
-        <text class="svg-label" x="344" y="144" text-anchor="middle">tools: Read · Write</text>
-        <text class="svg-label" x="344" y="164" text-anchor="middle">(only what its job needs)</text>
-        <path class="svg-arrow" d="M180 88 H258 M250 82 l8 6 -8 6"/>
-        <text class="svg-text" x="220" y="78" text-anchor="middle">task</text>
-        <path class="svg-arrow" d="M260 140 H184 M192 134 l-8 6 8 6"/>
-        <text class="svg-text" x="222" y="162" text-anchor="middle">report</text>
-        <text class="svg-label" x="220" y="208" text-anchor="middle">The subagent sees only its instructions and the task message.</text>
-      </svg>
-      <figcaption>Only the task goes in, and only the report comes back.</figcaption>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-comments"></i><span class="tag">Main Claude</span>Knows your whole chat</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="arrow c-blue">task</div>
+          <div class="arrow back c-purple">report</div>
+        </div>
+        <div class="node c-purple"><i class="fa-solid fa-robot"></i><span class="tag">Subagent</span>Fresh, empty memory<small>tools: Read · Write</small></div>
+      </div>
+      <figcaption>Only the task goes in, and only one short report comes back.</figcaption>
     </figure>
   </section>
 
@@ -76,18 +66,14 @@
       <li>It works using only the tools it is allowed, then sends one final report back.</li>
       <li>The main Claude reads that report and continues talking with you.</li>
     </ol>
-    <figure>
-      <pre class="mermaid">
-sequenceDiagram
-  participant You
-  participant Main as Main Claude
-  participant Sub as Subagent
-  You->>Main: "Explain how this works"
-  Main->>Sub: Task message (all the details it needs)
-  Note over Sub: Reads files, works alone
-  Sub-->>Main: One short report
-  Main->>You: Answer, using the report
-      </pre>
+    <figure class="illus">
+      <div class="timeline">
+        <div class="stop c-blue active"><i class="fa-solid fa-user"></i>You ask a question</div>
+        <div class="stop c-blue"><i class="fa-solid fa-paper-plane"></i>Main Claude sends a task with every detail</div>
+        <div class="stop c-purple"><i class="fa-solid fa-robot"></i>The subagent works alone</div>
+        <div class="stop c-purple"><i class="fa-solid fa-file-lines"></i>It sends back one report</div>
+        <div class="stop c-green"><i class="fa-solid fa-comment-dots"></i>Main Claude answers you</div>
+      </div>
       <figcaption>The subagent's work stays in its own memory.</figcaption>
     </figure>
   </section>
@@ -177,7 +163,6 @@ You are a patient tutor for a beginner student ...
 
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
 <script src="../../assets/lesson.js"></script>
 </body>
 </html>

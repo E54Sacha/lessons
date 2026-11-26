@@ -6,7 +6,7 @@ The quizzes are also the question bank for my CS revision game ([cs-quiz-app](ht
 
 ## Read the lessons
 
-Open **[the lessons home page](https://e54sacha.github.io/lessons/)** (or `index.html` locally). Each lesson is an illustrated web page: drawings, diagrams, formulas, tip boxes and a quiz with hidden answers.
+Open **[the lessons home page](https://e54sacha.github.io/lessons/)** (or `index.html` locally). Each lesson is an illustrated web page: diagrams built from cards and icons, drawings, formulas, tip boxes and a quiz with hidden answers.
 
 ## Structure
 
@@ -21,7 +21,7 @@ schema/quiz.schema.json                  ← the format of every .quiz.json
 
 Subjects: `cs`, `maths`, `physics`, `finance`, `general-knowledge` (see [subjects.json](subjects.json)).
 
-Diagrams use [Mermaid](https://mermaid.js.org/) and formulas use [KaTeX](https://katex.org/), both loaded from a CDN with integrity checks.
+Diagrams are plain HTML/CSS (the illustration kit in `assets/lesson.css`) with [Font Awesome](https://fontawesome.com/) icons; formulas use [KaTeX](https://katex.org/). Both are loaded from a CDN with integrity checks.
 
 ## Quiz format (for the game)
 
@@ -34,7 +34,7 @@ Four question types, described in [schema/quiz.schema.json](schema/quiz.schema.j
 | `multiple_choice` | index of the correct option, 0-3 | `options` (4 strings) |
 | `fill_blank` | the missing word | `accept` (other spellings) |
 
-Every question also has an `explanation`.
+Every question also has an `explanation`, and can have a `figure`: one self-contained inline SVG picture (inline colours, no scripts), the same one shown in the lesson page.
 
 ## License
 

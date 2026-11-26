@@ -11,6 +11,7 @@
   <meta name="lesson-source" content="general">
   <meta name="lesson-quiz" content="newtons-laws.quiz.json">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
   <link rel="stylesheet" href="../../assets/lesson.css">
 </head>
 <body>
@@ -31,21 +32,28 @@
       <strong>💡 Think of it like this</strong>
       <p>A shopping cart stays still until you push it (law 1). An empty cart speeds up faster than a full one (law 2). And you feel the cart's handle pressing back into your hands (law 3).</p>
     </aside>
-    <figure>
-      <svg viewBox="0 0 420 200" role="img" aria-label="A box pushed right with 50 newtons while friction pulls left with 10 newtons, giving a net force of 40 newtons to the right">
-        <line class="svg-line" x1="20" y1="130" x2="400" y2="130"/>
-        <rect class="svg-accent" x="160" y="60" width="100" height="70" rx="8"/>
-        <text class="svg-text" x="210" y="92" text-anchor="middle">20 kg</text>
-        <text class="svg-label" x="210" y="112" text-anchor="middle">cart</text>
-        <path class="svg-arrow" d="M40 95 H155 M155 95 l-10 -6 M155 95 l-10 6"/>
-        <text class="svg-strong" x="95" y="82" text-anchor="middle">push 50 N</text>
-        <path class="svg-arrow" d="M330 95 H265 M265 95 l10 -6 M265 95 l10 6"/>
-        <text class="svg-text" x="310" y="82" text-anchor="middle">friction 10 N</text>
-        <rect class="svg-hl" x="120" y="148" width="180" height="34" rx="8"/>
-        <path class="svg-arrow" d="M150 165 H270 M270 165 l-10 -6 M270 165 l-10 6"/>
-        <text class="svg-label" x="210" y="196" text-anchor="middle">net force = 50 − 10 = 40 N to the right</text>
-      </svg>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-hand"></i><span class="tag">Your push</span>50 N</div>
+        <div class="arrow c-blue">pushes</div>
+        <div class="node c-purple"><i class="fa-solid fa-cart-shopping"></i><span class="tag">Cart</span>20 kg</div>
+        <div class="arrow back c-orange">pulls</div>
+        <div class="node c-orange"><i class="fa-solid fa-road"></i><span class="tag">Friction</span>10 N</div>
+      </div>
+      <div class="stats" style="margin-top:18px">
+        <div class="stat c-blue"><div class="value">50 N</div><div class="label">to the right</div></div>
+        <div class="stat c-orange"><div class="value">− 10 N</div><div class="label">to the left</div></div>
+        <div class="stat c-green"><div class="value">= 40 N</div><div class="label">net force, to the right</div></div>
+      </div>
       <figcaption>Only the net force (all forces added together) decides how the object's motion changes.</figcaption>
+    </figure>
+    <figure class="illus">
+      <div class="layers">
+        <div class="layer c-gray"><i class="fa-solid fa-pause"></i><div><strong>Law 1 · Inertia</strong><span>No net force → the motion stays the same.</span></div></div>
+        <div class="layer c-blue"><i class="fa-solid fa-gauge-high"></i><div><strong>Law 2 · F = m × a</strong><span>A net force → the object speeds up or slows down.</span></div></div>
+        <div class="layer c-purple"><i class="fa-solid fa-arrows-left-right"></i><div><strong>Law 3 · Action and reaction</strong><span>Forces come in equal and opposite pairs.</span></div></div>
+      </div>
+      <figcaption>The three laws at a glance.</figcaption>
     </figure>
   </section>
 
@@ -68,19 +76,30 @@
       <li><strong>Law 2:</strong> if the net force is not zero, the object accelerates: \( F = m \times a \), so \( a = F / m \).</li>
       <li><strong>Law 3:</strong> forces come in pairs. If A pushes B, B pushes A with the same size of force, in the opposite direction.</li>
     </ol>
-    <figure>
-      <pre class="mermaid">
-flowchart LR
-  S["Add up all forces"] --> Q{"Net force = 0?"}
-  Q -- yes --> L1["Law 1: motion<br/>stays the same"]
-  Q -- no --> L2["Law 2: accelerates<br/>a = F / m"]
-      </pre>
+    <figure class="illus">
+      <div class="flow vertical">
+        <div class="node c-gray"><i class="fa-solid fa-plus"></i>Add up all the forces</div>
+        <div class="arrow"></div>
+        <div class="node decision c-blue">Is the net force zero?</div>
+      </div>
+      <div class="branches" style="margin-top:14px">
+        <div class="branch"><span class="chip c-green">yes</span><div class="node c-green"><i class="fa-solid fa-pause"></i><span class="tag">Law 1</span>Motion stays the same</div></div>
+        <div class="branch"><span class="chip c-orange">no</span><div class="node c-orange"><i class="fa-solid fa-gauge-high"></i><span class="tag">Law 2</span>It accelerates<small>a = F / m</small></div></div>
+      </div>
       <figcaption>Laws 1 and 2 answer one question: does the net force cancel out or not?</figcaption>
     </figure>
     <aside class="callout warning">
       <strong>⚠️ Common mistake</strong>
       <p>The two forces of law 3 do <strong>not</strong> cancel out, because they act on <strong>different</strong> objects. You push the cart, the cart pushes you.</p>
     </aside>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-person"></i><span class="tag">You</span>feel 50 N on your hands</div>
+        <div class="arrow both c-purple">50 N each way</div>
+        <div class="node c-purple"><i class="fa-solid fa-cart-shopping"></i><span class="tag">Cart</span>feels 50 N forward</div>
+      </div>
+      <figcaption>Same size, opposite directions, on two different objects.</figcaption>
+    </figure>
   </section>
 
   <section id="example">
@@ -138,11 +157,13 @@ flowchart LR
         <ol class="options"><li>It is halved</li><li>It stays the same</li><li>It doubles</li><li>It becomes four times bigger</li></ol>
         <details><summary>Answer</summary><p><strong>C.</strong> In \( a = F / m \), acceleration grows in proportion to force. A is the mistake of mixing up force and mass.</p></details></li>
       <li><p class="q">A net force of 10 N acts on a 2 kg object. What is its acceleration?</p>
+        <div class="q-figure"><svg viewBox="0 0 300 110" role="img" aria-label="A 2 kg box pushed by a net force of 10 newtons"><line x1="10" y1="90" x2="290" y2="90" stroke="#8a94a3" stroke-width="2"/><rect x="150" y="34" width="80" height="56" rx="8" fill="#5b7fe0" fill-opacity="0.18" stroke="#5b7fe0" stroke-width="2"/><text x="190" y="68" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="currentColor">2 kg</text><line x1="40" y1="62" x2="138" y2="62" stroke="#e8792b" stroke-width="4" stroke-linecap="round"/><path d="M146 62 l-14 -9 v18 z" fill="#e8792b"/><text x="88" y="48" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#e8792b">10 N</text></svg></div>
         <ol class="options"><li>20 m/s²</li><li>12 m/s²</li><li>0.2 m/s²</li><li>5 m/s²</li></ol>
         <details><summary>Answer</summary><p><strong>D.</strong> \( a = F / m = 10 / 2 = 5\ \text{m/s}^2 \). A is tempting, but it multiplies instead of dividing.</p></details></li>
       <li><p class="q">Why does a heavy object speed up more slowly than a light one when pushed with the same force?</p>
         <details><summary>Answer</summary><p>Because \( a = F / m \): with the same force, a bigger mass gives a smaller acceleration. A full cart speeds up slower than an empty one.</p></details></li>
       <li><p class="q">What does the third law say happens when you push on a wall?</p>
+        <div class="q-figure"><svg viewBox="0 0 300 120" role="img" aria-label="A person pushing a wall: one arrow from the hand to the wall, one from the wall back to the hand"><rect x="230" y="10" width="24" height="100" rx="4" fill="#8a94a3" fill-opacity="0.35" stroke="#8a94a3" stroke-width="2"/><circle cx="70" cy="30" r="12" fill="none" stroke="currentColor" stroke-width="3"/><path d="M70 42 v38 M70 80 l-16 28 M70 80 l16 28 M70 54 l70 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><line x1="150" y1="50" x2="214" y2="50" stroke="#5b7fe0" stroke-width="4" stroke-linecap="round"/><path d="M224 50 l-14 -8 v16 z" fill="#5b7fe0"/><line x1="216" y1="74" x2="160" y2="74" stroke="#9b6be0" stroke-width="4" stroke-linecap="round"/><path d="M150 74 l14 -8 v16 z" fill="#9b6be0"/><text x="186" y="40" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#5b7fe0">you → wall</text><text x="186" y="96" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#9b6be0">wall → you</text></svg></div>
         <details><summary>Answer</summary><p>The wall pushes back on you with a force of the same size in the opposite direction. That is why you feel the wall pressing on your hands.</p></details></li>
       <li><p class="q">Is it true that the two forces of a third-law pair act on the same object?</p>
         <details><summary>Answer</summary><p><strong>No, false.</strong> They act on two different objects: you push the cart, and the cart pushes you.</p></details></li>
@@ -165,7 +186,6 @@ flowchart LR
 
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
 <script src="../../assets/lesson.js"></script>
 </body>
 </html>
