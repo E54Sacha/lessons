@@ -1,0 +1,150 @@
+{
+  "lesson": "cs/devops/docker-and-docker-compose",
+  "title": "Docker and Docker Compose",
+  "subject": "cs",
+  "topic": "devops",
+  "difficulty": "beginner",
+  "created": "2026-11-27",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "fill_blank",
+      "question": "A running copy of a Docker image is called a _____.",
+      "answer": "container",
+      "accept": ["a container"],
+      "explanation": "The image is the recipe; the container is the dish cooked from it, actually running."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "question": "What is a Docker image?",
+      "options": [
+        "A program that is currently running",
+        "A read-only package with a program and everything it needs",
+        "A virtual machine with Windows inside",
+        "A backup copy of your database data"
+      ],
+      "answer": 1,
+      "explanation": "An image is a read-only template used to start containers. A is tempting, but the running thing is the container, not the image."
+    },
+    {
+      "id": "q3",
+      "type": "true_false",
+      "question": "Is it true that you can start several containers from the same image?",
+      "answer": true,
+      "explanation": "Like cooking one recipe many times, each container is a separate running copy of the same image."
+    },
+    {
+      "id": "q4",
+      "type": "fill_blank",
+      "question": "In an image name like postgres:17, the part after the colon is called the _____.",
+      "answer": "tag",
+      "accept": ["image tag", "version tag"],
+      "explanation": "The tag picks the version, so everyone who uses the same tag gets the same Postgres major version."
+    },
+    {
+      "id": "q5",
+      "type": "open",
+      "question": "Why run a database in a container instead of installing it directly on Windows?",
+      "answer": "Because the same image gives exactly the same version and settings on your PC, in CI and in production, and nothing gets installed on Windows itself.",
+      "explanation": "Delete the container and your system is clean again, and every machine runs the identical database version."
+    },
+    {
+      "id": "q6",
+      "type": "true_false",
+      "question": "Is it true that Docker Desktop runs Linux containers directly on the Windows kernel?",
+      "answer": false,
+      "explanation": "Linux containers need a Linux kernel. Docker Desktop runs them inside a small Linux virtual machine provided by WSL 2."
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "question": "Why can Docker Desktop fail with \"virtualization isn't enabled\"?",
+      "options": [
+        "You are not logged in to Docker Hub",
+        "The image tag does not exist",
+        "WSL 2 runs a virtual machine, which needs hardware virtualization turned on",
+        "Port 5432 is already used by another program"
+      ],
+      "answer": 2,
+      "explanation": "WSL 2 is a real virtual machine, so the CPU's virtualization and the Windows virtual machine feature must be on. The other problems give different errors, after Docker has started."
+    },
+    {
+      "id": "q8",
+      "type": "fill_blank",
+      "question": "In a port mapping like 8080:80, the first number is the port on your _____.",
+      "answer": "computer",
+      "accept": ["host", "PC", "machine", "own computer", "host machine"],
+      "explanation": "The format is \"host port : container port\": traffic to port 8080 on your PC goes to port 80 inside the container."
+    },
+    {
+      "id": "q9",
+      "type": "true_false",
+      "question": "Is it true that data written inside a container survives when the container is deleted, even without a volume?",
+      "answer": false,
+      "explanation": "Without a volume, the data lives in the container and is deleted with it. A volume stores it outside, so a new container finds it again."
+    },
+    {
+      "id": "q10",
+      "type": "open",
+      "question": "Why might the official Postgres image ignore your setup script the second time the database starts?",
+      "answer": "Because init scripts run only when the data volume is empty. On later starts the database already exists, so the scripts are skipped.",
+      "explanation": "To rerun the init scripts you must delete the volume so the database starts from scratch."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "question": "What does a healthcheck tell Docker?",
+      "options": [
+        "Whether the image has finished downloading",
+        "How much memory the container uses",
+        "Whether the volume is empty",
+        "Whether the program inside is actually ready to work"
+      ],
+      "answer": 3,
+      "explanation": "A healthcheck repeats a small test (like pg_isready) until it passes. A container can be \"running\" before the program inside is ready, which is why A or a simple \"started\" is not enough."
+    },
+    {
+      "id": "q12",
+      "type": "open",
+      "question": "Why wait for the database to be healthy before running the tests?",
+      "answer": "Because the database needs a few seconds to start after the container starts, and tests run too early would fail to connect.",
+      "explanation": "--wait or a healthcheck in CI holds the tests back until the database is ready."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "question": "Which command runs a program inside a container that is already running?",
+      "options": [
+        "docker compose exec",
+        "docker compose up",
+        "docker compose logs",
+        "docker compose ps"
+      ],
+      "answer": 0,
+      "explanation": "exec runs a command in a running container, for example psql. B is tempting, but up starts containers; it does not run extra programs inside them."
+    },
+    {
+      "id": "q14",
+      "type": "true_false",
+      "question": "Is it true that docker compose down, without -v, keeps the data stored in named volumes?",
+      "answer": true,
+      "explanation": "down removes the containers only. Adding -v also deletes the volumes, and with them all the data."
+    },
+    {
+      "id": "q15",
+      "type": "open",
+      "question": "How is a database service container in CI similar to Docker Compose on your PC?",
+      "answer": "Both start the same image with the same settings, port and healthcheck next to your code.",
+      "explanation": "The tests connect the same way in both places, so they behave the same locally and in CI."
+    },
+    {
+      "id": "q16",
+      "type": "fill_blank",
+      "question": "Each instruction in a Dockerfile adds one image _____.",
+      "answer": "layer",
+      "accept": ["layers"],
+      "explanation": "An image is a stack of layers. Docker caches them, so a rebuild only redoes the layers that changed."
+    }
+  ]
+}

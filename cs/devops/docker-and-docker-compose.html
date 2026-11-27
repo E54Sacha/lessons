@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docker and Docker Compose · Lessons</title>
+  <meta name="lesson-subject" content="cs">
+  <meta name="lesson-topic" content="devops">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-27">
+  <meta name="lesson-source" content="habit-tracker">
+  <meta name="lesson-quiz" content="docker-and-docker-compose.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › CS › DevOps</nav>
+    <h1><span class="icon">🐳</span>Docker and Docker Compose</h1>
+    <p class="lede">Run programs like a database in sealed boxes that behave the same on your PC, in CI and in production.</p>
+    <div class="tags"><span>beginner</span><span>cs</span><span>2026-11-27</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p><strong>Docker</strong> runs programs inside <strong>containers</strong>: sealed boxes that carry the program and everything it needs. A container is started from an <strong>image</strong>, a read-only package of files. Because the image is identical everywhere, Postgres 17 on your PC is exactly the same Postgres 17 in GitHub Actions and in production. <strong>Docker Compose</strong> lets you describe your containers in one file and start them with one command.</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>An image is a <strong>recipe</strong>. A container is a <strong>dish cooked from it</strong>. You can cook the same recipe many times, and throwing away a dish does not destroy the recipe.</p>
+    </aside>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-file-lines"></i><span class="tag">Image</span>postgres:17<small>the recipe</small></div>
+        <div class="arrow c-blue">run</div>
+        <div class="node c-green"><i class="fa-solid fa-box"></i><span class="tag">Container</span>a running Postgres<small>the dish</small></div>
+      </div>
+      <figcaption>One image can start as many containers as you like, on any machine.</figcaption>
+    </figure>
+    <figure class="illus">
+      <div class="layers">
+        <div class="layer c-green"><i class="fa-solid fa-box"></i><div><strong>Container</strong><span>Postgres 17, a Linux program</span></div></div>
+        <div class="layer c-purple"><i class="fa-brands fa-docker"></i><div><strong>Docker engine</strong><span>starts and stops containers</span></div></div>
+        <div class="layer c-orange"><i class="fa-brands fa-linux"></i><div><strong>WSL 2</strong><span>a tiny Linux virtual machine</span></div></div>
+        <div class="layer c-gray"><i class="fa-solid fa-microchip"></i><div><strong>Windows + CPU virtualization</strong><span>must be turned on</span></div></div>
+      </div>
+      <figcaption>On Windows, Docker Desktop hides a small Linux machine underneath your containers.</figcaption>
+    </figure>
+    <p>Containers share a <strong>Linux</strong> kernel (the core of the operating system), so Windows needs a Linux to lend them. Docker Desktop uses <strong>WSL 2</strong> for this, which is a real virtual machine. It needs hardware virtualization: if it is off, you get "WSL 2 can't start because virtualization isn't enabled". <code>wsl --install --no-distribution</code> installs the Windows parts of WSL without a Linux distribution, and a restart turns them on.</p>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>Image</dt><dd>A read-only package with a program and its files, named like <code>postgres:17</code> (name:tag).</dd></div>
+      <div><dt>Container</dt><dd>A running copy of an image, isolated from the rest of your computer.</dd></div>
+      <div><dt>Volume</dt><dd>Storage kept by Docker outside the container, so data survives when the container is deleted.</dd></div>
+      <div><dt>Port mapping</dt><dd>A door from your PC into the container: <code>5432:5432</code> means "PC port : container port".</dd></div>
+      <div><dt>Healthcheck</dt><dd>A small command Docker repeats to know if the program inside is really ready.</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li><code>docker compose up -d</code> reads the compose file, downloads the image if needed and starts the container in the background (<code>-d</code> = detached). Add <code>--wait</code> to return only once the healthcheck says "healthy".</li>
+      <li>On the <strong>very first start</strong>, the volume is empty: Postgres creates its database and runs any scripts in <code>/docker-entrypoint-initdb.d</code>.</li>
+      <li><code>docker compose ps</code> shows what runs; <code>docker compose logs db</code> shows its output.</li>
+      <li><code>docker compose exec db psql -U habits</code> runs <code>psql</code> <em>inside</em> the running container.</li>
+      <li><code>docker compose down</code> deletes the container but keeps the volume. <code>down -v</code> also deletes the volume, so <strong>all the data is gone</strong>.</li>
+    </ol>
+    <figure class="illus">
+      <div class="flow vertical">
+        <div class="node c-blue"><i class="fa-solid fa-play"></i>Container starts</div>
+        <div class="arrow"></div>
+        <div class="node decision c-blue">Is the data volume empty?</div>
+      </div>
+      <div class="branches" style="margin-top:14px">
+        <div class="branch"><span class="chip c-green">yes</span><div class="node c-green"><i class="fa-solid fa-scroll"></i><span class="tag">First start</span>Create DB + run init scripts</div></div>
+        <div class="branch"><span class="chip c-gray">no</span><div class="node c-gray"><i class="fa-solid fa-forward"></i><span class="tag">Later starts</span>Reuse data, skip scripts</div></div>
+      </div>
+      <figcaption>Init scripts run only once, when the volume is brand new.</figcaption>
+    </figure>
+    <aside class="callout warning">
+      <strong>⚠️ Common mistake</strong>
+      <p>Using <code>down -v</code> "to restart cleanly" when you meant <code>down</code>. The <code>-v</code> wipes your data. It is useful only when you <em>want</em> a fresh database, for example to rerun an init script.</p>
+    </aside>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>The habit-tracker's <code>docker-compose.yml</code> (slightly shortened). Its init script holds one line, <code>CREATE DATABASE habits_test OWNER habits;</code>, which creates the database the tests use.</p>
+<pre><code>services:
+  db:
+    image: postgres:17              <span class="comment"># recipe name:tag, pins the version</span>
+    environment:                    <span class="comment"># settings read on the first start</span>
+      POSTGRES_USER: habits
+      POSTGRES_PASSWORD: habits
+      POSTGRES_DB: habits
+    ports: ["5432:5432"]            <span class="comment"># PC port : container port</span>
+    volumes:
+      - db-data:/var/lib/postgresql/data              <span class="comment"># data survives</span>
+      - ./api/db-init:/docker-entrypoint-initdb.d:ro  <span class="comment"># init scripts, read-only</span>
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U habits"]     <span class="comment"># every 2 s, 15 tries</span>
+volumes:
+  db-data:                          <span class="comment"># the named volume</span></code></pre>
+    <p>In CI, GitHub Actions starts the <strong>same image</strong> as a <em>service container</em> next to the test job: same <code>postgres:17</code>, same user, same port, same <code>pg_isready</code> healthcheck. The tests connect to <code>localhost:5432</code> in both places, so they never notice the difference.</p>
+    <figure class="illus">
+      <div class="compare">
+        <div class="side c-blue"><span class="chip c-blue">your PC</span><p><i class="fa-solid fa-laptop"></i> Docker Compose starts <code>postgres:17</code> on port 5432</p></div>
+        <div class="arrow both"></div>
+        <div class="side c-purple"><span class="chip c-purple">CI</span><p><i class="fa-solid fa-gears"></i> GitHub Actions starts <code>postgres:17</code> on port 5432</p></div>
+      </div>
+      <figcaption>Same image, same settings: tests behave the same locally and in CI.</figcaption>
+    </figure>
+    <aside class="callout tip">
+      <strong>✅ Coming on Day 3</strong>
+      <p>The API gets its own <strong>Dockerfile</strong>: a recipe for building your own image. Each instruction (copy files, install packages…) adds a <strong>layer</strong>. Docker caches layers, so a rebuild only redoes the layers that changed.</p>
+    </aside>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>Same version everywhere: PC, CI, production.</li>
+        <li>Nothing installed on Windows itself; delete the container and it is gone.</li>
+        <li>The whole setup lives in one file, shared with the code in Git.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>On Windows it needs WSL 2, virtualization and some RAM.</li>
+        <li>Data lives in volumes: easy to delete by mistake with <code>-v</code>.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>Install Postgres on Windows:</strong> works, but versions drift between machines and it runs all the time.</div>
+      <div><strong>A hosted database:</strong> a cloud provider runs Postgres for you; needs internet and an account.</div>
+      <div><strong>Podman:</strong> another container tool that runs the same images.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">A running copy of a Docker image is called a _____.</p>
+        <details><summary>Answer</summary><p><strong>Container.</strong> The image is the recipe; the container is the dish cooked from it, actually running.</p></details></li>
+      <li><p class="q">What is a Docker image?</p>
+        <ol class="options"><li>A program that is currently running</li><li>A read-only package with a program and everything it needs</li><li>A virtual machine with Windows inside</li><li>A backup copy of your database data</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> An image is a read-only template used to start containers. A is tempting, but the running thing is the container, not the image.</p></details></li>
+      <li><p class="q">Is it true that you can start several containers from the same image?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> Like cooking one recipe many times, each container is a separate running copy of the same image.</p></details></li>
+      <li><p class="q">In an image name like postgres:17, the part after the colon is called the _____.</p>
+        <details><summary>Answer</summary><p><strong>Tag.</strong> The tag picks the version, so everyone who uses the same tag gets the same Postgres major version.</p></details></li>
+      <li><p class="q">Why run a database in a container instead of installing it directly on Windows?</p>
+        <details><summary>Answer</summary><p>Because the same image gives exactly the same version and settings on your PC, in CI and in production, and nothing gets installed on Windows itself. Delete the container and your system is clean again.</p></details></li>
+      <li><p class="q">Is it true that Docker Desktop runs Linux containers directly on the Windows kernel?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> Linux containers need a Linux kernel. Docker Desktop runs them inside a small Linux virtual machine provided by WSL 2.</p></details></li>
+      <li><p class="q">Why can Docker Desktop fail with "virtualization isn't enabled"?</p>
+        <ol class="options"><li>You are not logged in to Docker Hub</li><li>The image tag does not exist</li><li>WSL 2 runs a virtual machine, which needs hardware virtualization turned on</li><li>Port 5432 is already used by another program</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> WSL 2 is a real virtual machine, so the CPU's virtualization and the Windows virtual machine feature must be on. The other problems give different errors, after Docker has started.</p></details></li>
+      <li><p class="q">In a port mapping like 8080:80, the first number is the port on your _____.</p>
+        <details><summary>Answer</summary><p><strong>Computer (the host).</strong> The format is "host port : container port": traffic to port 8080 on your PC goes to port 80 inside the container.</p></details></li>
+      <li><p class="q">Is it true that data written inside a container survives when the container is deleted, even without a volume?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> Without a volume, the data lives in the container and is deleted with it. A volume stores it outside, so a new container finds it again.</p></details></li>
+      <li><p class="q">Why might the official Postgres image ignore your setup script the second time the database starts?</p>
+        <details><summary>Answer</summary><p>Because init scripts run only when the data volume is empty. On later starts the database already exists, so the scripts are skipped. To rerun them you must delete the volume.</p></details></li>
+      <li><p class="q">What does a healthcheck tell Docker?</p>
+        <ol class="options"><li>Whether the image has finished downloading</li><li>How much memory the container uses</li><li>Whether the volume is empty</li><li>Whether the program inside is actually ready to work</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> A healthcheck repeats a small test (like <code>pg_isready</code>) until it passes. A container can be "running" before the program inside is ready, which is why A or a simple "started" is not enough.</p></details></li>
+      <li><p class="q">Why wait for the database to be healthy before running the tests?</p>
+        <details><summary>Answer</summary><p>Because the database needs a few seconds to start after the container starts. Tests run too early would fail to connect. <code>--wait</code> or a healthcheck in CI holds the tests back until it is ready.</p></details></li>
+      <li><p class="q">Which command runs a program inside a container that is already running?</p>
+        <ol class="options"><li>docker compose exec</li><li>docker compose up</li><li>docker compose logs</li><li>docker compose ps</li></ol>
+        <details><summary>Answer</summary><p><strong>A.</strong> <code>exec</code> runs a command in a running container, for example <code>psql</code>. B is tempting, but <code>up</code> starts containers; it does not run extra programs inside them.</p></details></li>
+      <li><p class="q">Is it true that docker compose down, without -v, keeps the data stored in named volumes?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> <code>down</code> removes the containers only. Adding <code>-v</code> also deletes the volumes, and with them all the data.</p></details></li>
+      <li><p class="q">How is a database service container in CI similar to Docker Compose on your PC?</p>
+        <details><summary>Answer</summary><p>Both start the same image with the same settings, port and healthcheck next to your code. The tests connect the same way in both places, so they behave the same locally and in CI.</p></details></li>
+      <li><p class="q">Each instruction in a Dockerfile adds one image _____.</p>
+        <details><summary>Answer</summary><p><strong>Layer.</strong> An image is a stack of layers. Docker caches them, so a rebuild only redoes the layers that changed.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="noticing">
+    <h2><span class="icon">🔎</span>Things worth noticing</h2>
+    <ul>
+      <li>If the volume already existed before the init script was added, <code>habits_test</code> was never created. The fix is <code>docker compose down -v</code> then <code>up -d</code> (this also wipes the dev data).</li>
+      <li>CI does not use the init script: it creates <code>habits_test</code> directly with <code>POSTGRES_DB</code>. Two routes, same result.</li>
+      <li>The password <code>habits</code> is fine for a local box, but production must use a real secret.</li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>Writing the API's Dockerfile and ordering instructions for good layer caching</li>
+      <li>Networks in Compose: how two containers (API and DB) find each other by name</li>
+      <li>Environment files (<code>.env</code>) and keeping secrets out of Git</li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="docker-and-docker-compose.quiz.json">docker-and-docker-compose.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>
