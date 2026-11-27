@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Database migrations with Alembic · Lessons</title>
+  <meta name="lesson-subject" content="cs">
+  <meta name="lesson-topic" content="databases">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-27">
+  <meta name="lesson-source" content="habit-tracker">
+  <meta name="lesson-quiz" content="database-migrations-alembic.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › CS › Databases</nav>
+    <h1><span class="icon">🗄️</span>Database migrations with Alembic</h1>
+    <p class="lede">How to change the shape of a database step by step, in versioned files, without losing the data already inside.</p>
+    <div class="tags"><span>beginner</span><span>cs</span><span>2026-11-27</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>A database has a <strong>schema</strong>: the list of its tables, columns and rules. Your Python models (SQLAlchemy classes) describe the schema you <em>want</em>. But a real database already holds users and their data, so you cannot just delete it and rebuild it. A <strong>migration</strong> is a small file that says how to go from one version of the schema to the next. Alembic runs these files, in order, on every database: your laptop, the tests, production.</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>Migrations are like git commits for the database. Each one is a small, named change that points to the one before it. Anyone who replays them in order ends up with exactly the same result.</p>
+    </aside>
+    <figure class="illus">
+      <div class="compare">
+        <div class="side c-red"><span class="chip c-red">create_all</span><p>Creates the tables that are missing. Skips tables that already exist, so a new column never reaches production.</p></div>
+        <div class="arrow"></div>
+        <div class="side c-green"><span class="chip c-green">migrations</span><p>Change existing tables in small, ordered steps. Data stays. Every environment changes the same way.</p></div>
+      </div>
+      <figcaption>Fine for a quick prototype, not for a database that already holds real data.</figcaption>
+    </figure>
+    <figure class="illus">
+      <div class="timeline">
+        <div class="stop c-gray"><i class="fa-solid fa-circle"></i>base (empty)</div>
+        <div class="stop c-blue active"><i class="fa-solid fa-table-cells"></i>0001 create tables</div>
+        <div class="stop c-purple"><i class="fa-solid fa-plus"></i>0002 next change</div>
+        <div class="stop c-green"><i class="fa-solid fa-flag-checkered"></i>head</div>
+      </div>
+      <figcaption>The revision chain. The database remembers where it is in its <code>alembic_version</code> table.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>Schema</dt><dd>The shape of the database: tables, columns, types and rules, but not the data itself.</dd></div>
+      <div><dt>Migration (revision)</dt><dd>A versioned file with an <code>upgrade()</code> function (apply the change) and a <code>downgrade()</code> function (undo it).</dd></div>
+      <div><dt>Revision chain</dt><dd>Each migration names its parent in <code>down_revision</code>; the newest one is called <em>head</em>.</dd></div>
+      <div><dt>alembic_version</dt><dd>A one-row table inside the database that stores the revision it is currently at.</dd></div>
+      <div><dt>Constraint</dt><dd>A rule the database itself enforces, like "this value must be unique" or "this must point to a real row".</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li><strong>Change a model</strong> in Python (add a column, a table, a rule).</li>
+      <li><strong>Generate a migration:</strong> <code>alembic revision --autogenerate -m "what changed"</code>. Alembic compares your models with the database and writes the difference into a new file.</li>
+      <li><strong>Read the file.</strong> Autogenerate only guesses. A renamed column looks like "drop old column, add new one", which would delete the data in it.</li>
+      <li><strong>Apply it:</strong> <code>alembic upgrade head</code> runs every migration after the one stored in <code>alembic_version</code>, then updates that table.</li>
+      <li><strong>Undo if needed:</strong> <code>alembic downgrade -1</code> runs the last <code>downgrade()</code>. Add <code>--sql</code> to any upgrade to print the SQL instead of running it, so you can check it first.</li>
+    </ol>
+    <figure class="illus">
+      <div class="flow">
+        <div class="node c-blue"><i class="fa-solid fa-pen"></i><span class="tag">1</span>Edit model</div>
+        <div class="arrow"></div>
+        <div class="node c-purple"><i class="fa-solid fa-file-lines"></i><span class="tag">2</span>revision --autogenerate</div>
+        <div class="arrow"></div>
+        <div class="node c-orange"><i class="fa-solid fa-magnifying-glass"></i><span class="tag">3</span>Review by hand</div>
+        <div class="arrow"></div>
+        <div class="node c-green"><i class="fa-solid fa-database"></i><span class="tag">4</span>upgrade head</div>
+      </div>
+      <figcaption>The everyday loop. Step 3 is the one people skip, and regret.</figcaption>
+    </figure>
+    <aside class="callout warning">
+      <strong>⚠️ Common mistake</strong>
+      <p>Running an autogenerated migration without reading it. Alembic cannot tell a rename from "delete + create". Fix it by hand with <code>op.alter_column(..., new_column_name=...)</code>.</p>
+    </aside>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>The habit tracker's first migration, trimmed to one table. It has no parent, so it is the start of the chain.</p>
+<pre><code>revision = "0001"
+down_revision = None  <span class="comment"># first in the chain</span>
+
+def upgrade() -&gt; None:
+    op.create_table(
+        "check_ins",
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("habit_id", sa.Integer(),
+                  sa.ForeignKey("habits.id", ondelete="CASCADE"), nullable=False),
+        sa.Column("day", sa.Date(), nullable=False),
+        sa.UniqueConstraint("habit_id", "day", name="uq_check_ins_habit_day"),
+    )
+
+def downgrade() -&gt; None:
+    op.drop_table("check_ins")  <span class="comment"># the exact undo</span>
+</code></pre>
+    <p>The matching model uses SQLAlchemy 2 style: <code>day: Mapped[date] = mapped_column(Date)</code>. <code>Mapped[...]</code> is a type hint that says "this is a database column of this Python type"; no <code>Optional</code> means <code>NOT NULL</code>.</p>
+    <figure class="illus">
+      <div class="layers">
+        <div class="layer c-blue"><i class="fa-solid fa-link"></i><div><strong>Foreign key + ON DELETE CASCADE</strong><span>Delete a user → the database deletes their habits, then their check-ins.</span></div></div>
+        <div class="layer c-purple"><i class="fa-solid fa-fingerprint"></i><div><strong>Unique (habit_id, day)</strong><span>A habit can be checked at most once per day.</span></div></div>
+        <div class="layer c-green"><i class="fa-solid fa-calendar-day"></i><div><strong>A local DATE, not a timestamp</strong><span>"Done on Tuesday" for the user, even at 23:30 in their time zone.</span></div></div>
+        <div class="layer c-gray"><i class="fa-solid fa-tag"></i><div><strong>Naming convention</strong><span>Constraints get predictable names like <code>uq_users_email</code>, so later migrations can find them.</span></div></div>
+      </div>
+      <figcaption>The rules in the model, enforced by the database itself.</figcaption>
+    </figure>
+    <h3>The tests use the real migrations</h3>
+    <p>Before the tests run, they go <code>downgrade base</code> then <code>upgrade head</code> on a test database, exactly like production. A second test compares the models with the migrated database and fails if they differ.</p>
+    <figure class="illus">
+      <div class="flow vertical">
+        <div class="node c-gray"><i class="fa-solid fa-flask"></i>Build test DB with migrations</div>
+        <div class="arrow"></div>
+        <div class="node decision c-blue">Models match the database?</div>
+      </div>
+      <div class="branches" style="margin-top:14px">
+        <div class="branch"><span class="chip c-green">yes</span><div class="node c-green"><i class="fa-solid fa-check"></i>Test passes</div></div>
+        <div class="branch"><span class="chip c-red">no</span><div class="node c-red"><i class="fa-solid fa-xmark"></i>Fails: you forgot a migration</div></div>
+      </div>
+      <figcaption>A safety net: changing a model without writing a migration breaks the build.</figcaption>
+    </figure>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>Existing data survives schema changes.</li>
+        <li>Every database reaches the same schema, by the same steps.</li>
+        <li>Changes are reviewed in git like code, and can be undone.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>Autogenerate misses renames and some details: you must read every file.</li>
+        <li>One more step each time you touch a model.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>create_all:</strong> fine for a throwaway prototype, but it never changes tables that already exist.</div>
+      <div><strong>Plain SQL files (Flyway, sqitch):</strong> the same idea with hand-written SQL instead of Python.</div>
+      <div><strong>Framework tools (Django migrations, Prisma Migrate):</strong> the same idea built into another framework.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">The description of a database's tables, columns and rules, without the data, is called its _____.</p>
+        <details><summary>Answer</summary><p><strong>Schema.</strong> The schema is the shape of the database; the rows inside are the data.</p></details></li>
+      <li><p class="q">Is it true that create_all can add a new column to a table that already exists?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> create_all only creates tables that are missing. It skips existing tables, so the new column never appears. Migrations are needed to change tables that already hold data.</p></details></li>
+      <li><p class="q">Why should every environment (laptop, tests, production) apply the same migration files?</p>
+        <details><summary>Answer</summary><p>So every database reaches exactly the same schema by the same steps. Hand-made changes on one machine would make the databases drift apart and cause bugs that only appear in one place.</p></details></li>
+      <li><p class="q">Which two functions does every migration file contain?</p>
+        <ol class="options"><li>migrate and rollback</li><li>create_all and drop_all</li><li>upgrade and downgrade</li><li>forward and backward</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> upgrade() applies the change and downgrade() undoes it. A sounds right in general, but those are not the names Alembic uses.</p></details></li>
+      <li><p class="q">Each migration names the one before it, which forms a _____ of revisions.</p>
+        <details><summary>Answer</summary><p><strong>Chain.</strong> The down_revision field points to the parent, so Alembic knows the order. The newest migration is the head.</p></details></li>
+      <li><p class="q">How does Alembic know which migrations a database has already run?</p>
+        <details><summary>Answer</summary><p>It reads the alembic_version table inside that database, which stores the current revision id. It then runs only the migrations that come after it in the chain.</p></details></li>
+      <li><p class="q">What does "alembic upgrade head" do?</p>
+        <ol class="options"><li>Creates a new migration file from the models</li><li>Runs every migration not yet applied, up to the newest one</li><li>Undoes the last migration</li><li>Deletes and recreates all the tables</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> It applies the missing migrations in order and updates alembic_version. A is what "revision --autogenerate" does.</p></details></li>
+      <li><p class="q">Is it true that adding --sql to an upgrade prints the SQL without changing the database?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> This "offline" mode only shows the SQL, so you can check it (or give it to someone) before running it for real.</p></details></li>
+      <li><p class="q">Why must you read an autogenerated migration before running it?</p>
+        <details><summary>Answer</summary><p>Because autogenerate only guesses from differences. A renamed column looks like "drop the old column, add a new one", which would delete the data in it, so you fix it by hand.</p></details></li>
+      <li><p class="q">In SQLAlchemy 2, a column is declared with a type hint like _____[int].</p>
+        <details><summary>Answer</summary><p><strong>Mapped.</strong> Mapped[int] tells SQLAlchemy (and your editor) that this attribute is a database column holding an int; without Optional it is NOT NULL.</p></details></li>
+      <li><p class="q">Is it true that ON DELETE CASCADE makes the database delete the child rows when their parent row is deleted?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> The database itself removes rows that point to the deleted one, for example a user's habits and their check-ins, so no orphan rows are left.</p></details></li>
+      <li><p class="q">A check-in table has a unique constraint on the pair (habit, day). What does it prevent?</p>
+        <ol class="options"><li>Two habits with the same name</li><li>A habit having check-ins on two different days</li><li>A check-in that points to no habit</li><li>Two check-ins for the same habit on the same day</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> The pair must be unique, so one habit can be checked only once per day. C is the job of the foreign key, not of the unique constraint.</p></details></li>
+      <li><p class="q">Why store the day a habit was done as a local date instead of a UTC timestamp?</p>
+        <details><summary>Answer</summary><p>Because what counts is the day in the user's own time zone. A check-in at 23:30 local time could fall on the next day in UTC; a plain date avoids that and makes "once per day" easy to enforce.</p></details></li>
+      <li><p class="q">Is it true that without a naming convention, you can always predict the names the database gives to constraints?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> Each database picks its own default names. A naming convention gives names like uq_users_email, so a later migration can find and drop the constraint by name.</p></details></li>
+      <li><p class="q">Why should tests build their database with the real migrations instead of create_all?</p>
+        <details><summary>Answer</summary><p>So the tests use the same path as production. A broken migration (or a broken downgrade) then fails the tests instead of failing on the real server.</p></details></li>
+      <li><p class="q">A test compares the models with the migrated database. When does it fail?</p>
+        <ol class="options"><li>When a model changed but no migration was written</li><li>When the test database has no rows</li><li>When a migration has a downgrade function</li><li>When the app has no users yet</li></ol>
+        <details><summary>Answer</summary><p><strong>A.</strong> Any difference between models and migrated schema means a migration is missing. B is not a problem: the test compares the shape, not the data.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="noticing">
+    <h2><span class="icon">🔎</span>Things worth noticing</h2>
+    <ul>
+      <li>The naming convention in the project only covers indexes (<code>ix</code>) and unique constraints (<code>uq</code>). Foreign keys and primary keys still get PostgreSQL's default names (like <code>habits_user_id_fkey</code>). Adding <code>fk</code> and <code>pk</code> entries would make every name predictable; if you do, read the next autogenerated migration carefully.</li>
+      <li>The "models match migrations" test compares types (<code>compare_type=True</code>) but not server defaults. Changing a <code>server_default</code> in a model without a migration would pass silently.</li>
+      <li>Because the tests go <code>downgrade base</code> then <code>upgrade head</code>, every test run also checks that <code>downgrade()</code> works. Nice.</li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>Data migrations: changing the rows themselves (for example, lowercasing every email)</li>
+      <li>Changing a column safely on a live database with no downtime</li>
+      <li>SQLAlchemy relationships and <code>passive_deletes</code></li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="database-migrations-alembic.quiz.json">database-migrations-alembic.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>
