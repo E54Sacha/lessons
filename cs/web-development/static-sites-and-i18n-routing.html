@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Static sites and multilingual (i18n) routing · Lessons</title>
+  <meta name="lesson-subject" content="cs">
+  <meta name="lesson-topic" content="web-development">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-27">
+  <meta name="lesson-source" content="portfolio">
+  <meta name="lesson-quiz" content="static-sites-and-i18n-routing.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › CS › Web development</nav>
+    <h1><span class="icon">🌐</span>Static sites and multilingual (i18n) routing</h1>
+    <p class="lede">Build every page in advance, one copy per language, and send each visitor to the right one.</p>
+    <div class="tags"><span>beginner</span><span>cs</span><span>2026-11-27</span><span>example: portfolio</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>A web page can be made at three moments. A <strong>static</strong> page is built once, before anyone visits. A <strong>server-rendered</strong> page is built by a server each time someone asks. A <strong>client-rendered</strong> page is built by JavaScript inside the visitor's browser. For a site in several languages, the static way is simple: build one finished page per language, give each its own address (<code>/en</code>, <code>/fr</code>), and send each visitor to the right one.</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>A static page is a printed leaflet: copies wait in a stack, you just hand one out. A server-rendered page is a meal cooked to order. A client-rendered page is a flat-pack kit the visitor builds at home. A bilingual site is two stacks of leaflets, one per language.</p>
+    </aside>
+    <figure class="illus">
+      <div class="layers">
+        <div class="layer c-green"><i class="fa-solid fa-file-lines"></i><div><strong>Static</strong><span>Built once, before deploy. Fastest to send.</span></div></div>
+        <div class="layer c-purple"><i class="fa-solid fa-server"></i><div><strong>Server-rendered</strong><span>Built by the server on every request.</span></div></div>
+        <div class="layer c-blue"><i class="fa-solid fa-laptop"></i><div><strong>Client-rendered</strong><span>Built by JavaScript in the browser.</span></div></div>
+      </div>
+      <figcaption>Same result on screen, built at different moments and places.</figcaption>
+    </figure>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-gray"><i class="fa-solid fa-gears"></i><span class="tag">Build</span>/en and /fr pages</div>
+        <div class="arrow">copied to</div>
+        <div class="node c-green"><i class="fa-solid fa-globe"></i><span class="tag">CDN</span>servers worldwide</div>
+        <div class="arrow">nearest one</div>
+        <div class="node c-blue"><i class="fa-solid fa-user"></i><span class="tag">Visitor</span>gets the file</div>
+      </div>
+      <figcaption>Why static is fast: the file is ready and already close to the visitor.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>CDN</dt><dd>A "content delivery network": many servers around the world that keep copies of your files, so each visitor downloads from a nearby one.</dd></div>
+      <div><dt>i18n</dt><dd>Short for "internationalisation" (i + 18 letters + n): making a site work in several languages.</dd></div>
+      <div><dt>Accept-Language</dt><dd>A line the browser sends with every request, listing the languages its user prefers, each with a score called a q-value (0 to 1).</dd></div>
+      <div><dt>Cookie</dt><dd>A small note a site stores in your browser; the browser sends it back on every later visit.</dd></div>
+      <div><dt>hreflang</dt><dd>Links in the page that tell search engines "this same page exists in French, at this address".</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li><strong>Build:</strong> the framework makes one HTML file per language and page (<code>/en</code>, <code>/fr</code>, <code>/en/how-its-built</code>…). Any other language code gives a 404 (page not found).</li>
+      <li><strong>Text from dictionaries:</strong> all words live in one list per language, so each build just swaps the list.</li>
+      <li><strong>Visitor opens <code>/</code>:</strong> a small piece of code in front of the site picks a language. First choice: the <code>lang</code> cookie. Otherwise: the best match in Accept-Language. Then it redirects (sends the browser to another address).</li>
+      <li><strong>Visitor opens <code>/fr</code>:</strong> the static page is sent and the cookie is set to <code>fr</code>, so the choice is remembered.</li>
+      <li><strong>Label the page:</strong> <code>&lt;html lang="fr"&gt;</code> tells screen readers and translators the language; hreflang links point search engines to the other versions.</li>
+    </ol>
+    <figure class="illus">
+      <div class="flow vertical">
+        <div class="node decision c-blue">Does the URL start with /en or /fr?</div>
+      </div>
+      <div class="branches" style="margin-top:14px">
+        <div class="branch"><span class="chip c-green">yes</span><div class="node c-green"><i class="fa-solid fa-file-lines"></i><span class="tag">Serve</span>static page<small>and save cookie</small></div></div>
+        <div class="branch"><span class="chip c-orange">no</span><div class="node c-orange"><i class="fa-solid fa-cookie-bite"></i><span class="tag">Pick</span>cookie, else Accept-Language<small>then redirect</small></div></div>
+      </div>
+      <figcaption>The address decides first; detection only runs when the address has no language.</figcaption>
+    </figure>
+    <aside class="callout warning">
+      <strong>⚠️ Common mistake</strong>
+      <p>Don't rely only on auto-detection. Someone in France may prefer English. Always give a visible language switch, and let the URL be the final word.</p>
+    </aside>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>In the portfolio, this decision lives in the proxy (Next.js 16's name for middleware: code that runs before a page is sent). Shortened:</p>
+<pre><code><span class="comment">// URL already has a language: let it through, remember it</span>
+if (isLocale(first)) {
+  const response = NextResponse.next();
+  response.cookies.set("lang", first, { path: "/", maxAge: YEAR });
+  return response;
+}
+<span class="comment">// No language in URL: cookie first, else the browser's list</span>
+const saved = request.cookies.get("lang")?.value;
+const lang = saved &amp;&amp; isLocale(saved)
+  ? saved
+  : localeFromAcceptLanguage(request.headers.get("accept-language"));
+url.pathname = `/${lang}${pathname === "/" ? "" : pathname}`;
+return NextResponse.redirect(url);</code></pre>
+    <p>A browser sends <code>de-DE,de;q=0.9,fr;q=0.8,en;q=0.7</code>. No q-value means 1. Sorted: German 1, German 0.9, French 0.8, English 0.7. The site has no German, so the first supported one wins:</p>
+    <figure class="illus">
+      <div class="stats">
+        <div class="stat c-red"><div class="value">de 1.0</div><div class="label">not supported</div></div>
+        <div class="stat c-green"><div class="value">fr 0.8</div><div class="label">chosen → /fr</div></div>
+        <div class="stat c-gray"><div class="value">en 0.7</div><div class="label">lower score</div></div>
+      </div>
+      <figcaption>Highest q-value among the languages the site actually has.</figcaption>
+    </figure>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>Very fast and cheap: a CDN just hands out ready files.</li>
+        <li>One URL per language can be shared, bookmarked and found by search engines.</li>
+        <li>Visitors land in their language without doing anything.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>Content that changes per user or every minute can't be fully static.</li>
+        <li>Each new language multiplies the number of pages to build.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>Same URL, auto-detected language:</strong> simpler addresses, but links can't be shared per language and search engines see only one version.</div>
+      <div><strong>Subdomains (fr.site.com):</strong> one host per language, same idea as <code>/fr</code>.</div>
+      <div><strong>Client-side translation:</strong> one page that swaps text with JavaScript; slower first view and bad for search engines.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">A page built once in advance and sent as the same file to every visitor is called a _____ page.</p>
+        <details><summary>Answer</summary><p><strong>Static.</strong> It is made before anyone visits, so the server only has to hand out a ready file.</p></details></li>
+      <li><p class="q">Which kind of page is built by the server at the moment each visitor asks for it?</p>
+        <ol class="options"><li>Static</li><li>Server-rendered</li><li>Client-rendered</li><li>Cached</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> Server-rendered pages are made fresh for each request. C is tempting, but client-rendered pages are built in the browser, not on the server.</p></details></li>
+      <li><p class="q">Why does a static page usually load faster than a server-rendered one?</p>
+        <details><summary>Answer</summary><p>It is already built, so nothing has to be computed, and a CDN keeps copies near each visitor, so the file travels a short distance.</p></details></li>
+      <li><p class="q">Is it true that a CDN is a single big server that all visitors connect to?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> A CDN is many servers spread around the world, each with a copy of the files, so visitors use a nearby one.</p></details></li>
+      <li><p class="q">Making a website work in several languages is called internationalisation, shortened to _____.</p>
+        <details><summary>Answer</summary><p><strong>i18n.</strong> There are 18 letters between the "i" and the "n" of "internationalisation".</p></details></li>
+      <li><p class="q">Why is it useful to give each language its own URL, such as /en and /fr?</p>
+        <details><summary>Answer</summary><p>Each version can be shared, bookmarked and indexed by search engines, and each can be a ready-made static page.</p></details></li>
+      <li><p class="q">Is it true that automatic language detection means the site no longer needs a language switch?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> Detection is only a guess from browser settings. Users still need a visible way to pick another language.</p></details></li>
+      <li><p class="q">Is it true that in Accept-Language, a language written without a q-value counts as the top preference?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> A missing q-value means q=1, the highest score.</p></details></li>
+      <li><p class="q">A browser sends "fr, en;q=0.9, de;q=0.5" to a site with only English and German. Which language should it get?</p>
+        <ol class="options"><li>French</li><li>German</li><li>English</li><li>None: show an error</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> French scores highest but the site doesn't have it, so the next best supported language wins: English (0.9) beats German (0.5).</p></details></li>
+      <li><p class="q">Why does a multilingual site save the visitor's language choice in a cookie?</p>
+        <details><summary>Answer</summary><p>The browser sends the cookie back on every visit, so the site remembers the choice next time, even if the browser's languages say something else.</p></details></li>
+      <li><p class="q">What does the lang attribute on the &lt;html&gt; tag tell?</p>
+        <ol class="options"><li>Which programming language the server uses</li><li>Which languages the visitor speaks</li><li>Which other translations exist</li><li>The language the page's text is written in</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> It labels the page's language for screen readers, translators and search engines. C is tempting, but that is the job of hreflang links.</p></details></li>
+      <li><p class="q">Links that tell search engines "this page also exists in another language, here" use the attribute _____.</p>
+        <details><summary>Answer</summary><p><strong>hreflang.</strong> Each link gives a language code and the address of that version, so search results show the right one.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="noticing">
+    <h2><span class="icon">🔎</span>Things worth noticing</h2>
+    <ul>
+      <li>The pages are static, but the redirect on <code>/</code> still needs a tiny bit of server code (the proxy). A pure static export with no server could not do it.</li>
+      <li>The cookie is set whenever someone opens <code>/fr</code>, even from a shared link. Clicking a French link changes the remembered language. That's a design choice, not a bug.</li>
+      <li>hreflang links must be full addresses (<code>https://…/fr</code>), which is why the layout sets <code>metadataBase</code>. An <code>x-default</code> link names the page for everyone else (English here).</li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>HTTP redirects: 301 vs 307 and when to use each</li>
+      <li>Incremental static regeneration: rebuilding static pages after deploy</li>
+      <li>Formatting dates and numbers per language with <code>Intl</code></li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="static-sites-and-i18n-routing.quiz.json">static-sites-and-i18n-routing.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>

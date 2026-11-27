@@ -1,0 +1,100 @@
+{
+  "lesson": "cs/web-development/static-sites-and-i18n-routing",
+  "title": "Static sites and multilingual (i18n) routing",
+  "subject": "cs",
+  "topic": "web-development",
+  "difficulty": "beginner",
+  "created": "2026-11-27",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "fill_blank",
+      "question": "A page built once in advance and sent as the same file to every visitor is called a _____ page.",
+      "answer": "static",
+      "accept": ["Static"],
+      "explanation": "It is made before anyone visits, so the server only has to hand out a ready file."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "question": "Which kind of page is built by the server at the moment each visitor asks for it?",
+      "options": ["Static", "Server-rendered", "Client-rendered", "Cached"],
+      "answer": 1,
+      "explanation": "Server-rendered pages are made fresh for each request. C is tempting, but client-rendered pages are built in the browser, not on the server."
+    },
+    {
+      "id": "q3",
+      "type": "open",
+      "question": "Why does a static page usually load faster than a server-rendered one?",
+      "answer": "It is already built, so nothing has to be computed, and a CDN keeps copies near each visitor, so the file travels a short distance.",
+      "explanation": "No work at request time plus a nearby copy means the visitor gets the file almost immediately."
+    },
+    {
+      "id": "q4",
+      "type": "true_false",
+      "question": "Is it true that a CDN is a single big server that all visitors connect to?",
+      "answer": false,
+      "explanation": "A CDN is many servers spread around the world, each with a copy of the files, so visitors use a nearby one."
+    },
+    {
+      "id": "q5",
+      "type": "fill_blank",
+      "question": "Making a website work in several languages is called internationalisation, shortened to _____.",
+      "answer": "i18n",
+      "accept": ["I18n", "I18N"],
+      "explanation": "There are 18 letters between the \"i\" and the \"n\" of \"internationalisation\"."
+    },
+    {
+      "id": "q6",
+      "type": "open",
+      "question": "Why is it useful to give each language its own URL, such as /en and /fr?",
+      "answer": "Each version can be shared, bookmarked and indexed by search engines, and each can be a ready-made static page.",
+      "explanation": "With one address per language, the address itself says which language you get, for people and for search engines."
+    },
+    {
+      "id": "q7",
+      "type": "true_false",
+      "question": "Is it true that automatic language detection means the site no longer needs a language switch?",
+      "answer": false,
+      "explanation": "Detection is only a guess from browser settings. Users still need a visible way to pick another language."
+    },
+    {
+      "id": "q8",
+      "type": "true_false",
+      "question": "Is it true that in Accept-Language, a language written without a q-value counts as the top preference?",
+      "answer": true,
+      "explanation": "A missing q-value means q=1, the highest score."
+    },
+    {
+      "id": "q9",
+      "type": "multiple_choice",
+      "question": "A browser sends \"fr, en;q=0.9, de;q=0.5\" to a site with only English and German. Which language should it get?",
+      "options": ["French", "German", "English", "None: show an error"],
+      "answer": 2,
+      "explanation": "French scores highest but the site doesn't have it, so the next best supported language wins: English (0.9) beats German (0.5)."
+    },
+    {
+      "id": "q10",
+      "type": "open",
+      "question": "Why does a multilingual site save the visitor's language choice in a cookie?",
+      "answer": "The browser sends the cookie back on every visit, so the site remembers the choice next time, even if the browser's languages say something else.",
+      "explanation": "A cookie is a note the browser keeps and returns with each request, so the site can read the earlier choice."
+    },
+    {
+      "id": "q11",
+      "type": "multiple_choice",
+      "question": "What does the lang attribute on the <html> tag tell?",
+      "options": ["Which programming language the server uses", "Which languages the visitor speaks", "Which other translations exist", "The language the page's text is written in"],
+      "answer": 3,
+      "explanation": "It labels the page's language for screen readers, translators and search engines. C is tempting, but that is the job of hreflang links."
+    },
+    {
+      "id": "q12",
+      "type": "fill_blank",
+      "question": "Links that tell search engines \"this page also exists in another language, here\" use the attribute _____.",
+      "answer": "hreflang",
+      "accept": ["href lang", "Hreflang"],
+      "explanation": "Each link gives a language code and the address of that version, so search results show the right one."
+    }
+  ]
+}
