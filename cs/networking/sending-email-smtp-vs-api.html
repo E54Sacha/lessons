@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How programs send email: SMTP vs HTTP email APIs · Lessons</title>
+  <meta name="lesson-subject" content="cs">
+  <meta name="lesson-topic" content="networking">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-27">
+  <meta name="lesson-source" content="portfolio">
+  <meta name="lesson-quiz" content="sending-email-smtp-vs-api.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › CS › Networking</nav>
+    <h1><span class="icon">📧</span>How programs send email: SMTP vs HTTP email APIs</h1>
+    <p class="lede">A program can talk to a mail server directly with SMTP, or ask an email service to do it through a normal web request.</p>
+    <div class="tags"><span>beginner</span><span>cs</span><span>2026-11-27</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>Email travels with <strong>SMTP</strong>, an old set of rules for handing a message to a mail server. A program can speak SMTP itself: connect to a server like Gmail, log in, and hand over the message. Or it can call an <strong>HTTP email API</strong>: send one ordinary web request to an email company, which speaks SMTP for you. Both end in the same inbox. The difference is <em>which door</em> your program knocks on, and some hosting providers lock the SMTP door.</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>SMTP is walking to the post office yourself. An HTTP email API is handing your letter to a courier at your front door. If the road to the post office is closed, the courier still gets through.</p>
+    </aside>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-server"></i><span class="tag">Your app</span>on Render</div>
+        <div class="arrow c-red">SMTP · 587</div>
+        <div class="node c-red"><i class="fa-solid fa-xmark"></i><span class="tag">Firewall</span>blocked</div>
+      </div>
+      <div class="flow" style="margin-top:18px">
+        <div class="node c-blue"><i class="fa-solid fa-server"></i><span class="tag">Your app</span>on Render</div>
+        <div class="arrow c-green">HTTPS · 443</div>
+        <div class="node c-purple"><i class="fa-solid fa-paper-plane"></i><span class="tag">Email service</span>Resend</div>
+        <div class="arrow c-purple">SMTP</div>
+        <div class="node c-green"><i class="fa-solid fa-envelope"></i><span class="tag">Inbox</span>your Gmail</div>
+      </div>
+      <figcaption>Same goal, two roads: direct SMTP was blocked, the HTTPS road was open.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>SMTP</dt><dd>Simple Mail Transfer Protocol: the standard rules for sending email to a mail server.</dd></div>
+      <div><dt>Port</dt><dd>A numbered door on a server; each kind of traffic uses its own number.</dd></div>
+      <div><dt>TLS</dt><dd>Encryption that stops anyone in the middle from reading the connection (the "S" in HTTPS).</dd></div>
+      <div><dt>App password</dt><dd>A separate password made for one program, so your real password never leaves your hands.</dd></div>
+      <div><dt>HTTP email API</dt><dd>An email service you call with a web request and an API key (a secret token that proves who you are).</dd></div>
+    </dl>
+    <figure class="illus">
+      <div class="layers">
+        <div class="layer c-gray"><i class="fa-solid fa-building"></i><div><strong>Port 25</strong><span>Server to server. Often blocked for apps.</span></div></div>
+        <div class="layer c-orange"><i class="fa-solid fa-lock-open"></i><div><strong>Port 587</strong><span>App to server. Starts plain, then STARTTLS.</span></div></div>
+        <div class="layer c-blue"><i class="fa-solid fa-lock"></i><div><strong>Port 465</strong><span>App to server. Encrypted from the start.</span></div></div>
+        <div class="layer c-green"><i class="fa-solid fa-globe"></i><div><strong>Port 443</strong><span>HTTPS, the web. Almost never blocked.</span></div></div>
+      </div>
+      <figcaption>The doors that matter for email.</figcaption>
+    </figure>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li><strong>Find the server.</strong> DNS (the internet's phone book) turns <code>smtp.gmail.com</code> into addresses: a short <strong>IPv4</strong> one and a long, newer <strong>IPv6</strong> one. If your machine has no IPv6 route, trying IPv6 fails with "Network is unreachable". Asking for IPv4 only avoids that.</li>
+      <li><strong>Open a door.</strong> Connect to port 587 or 465.</li>
+      <li><strong>Encrypt.</strong> On 587 the talk starts in plain text, then the <strong>STARTTLS</strong> command switches on encryption. On 465 it is <strong>implicit TLS</strong>: encrypted from the first byte.</li>
+      <li><strong>Log in</strong> with an app password (Gmail requires 2-step verification for this).</li>
+      <li><strong>Hand over the message</strong> with its headers: From, To, Subject and <strong>Reply-To</strong> (where the "Reply" button sends the answer).</li>
+    </ol>
+    <figure class="illus">
+      <div class="timeline">
+        <div class="stop c-gray"><i class="fa-solid fa-address-book"></i>DNS lookup</div>
+        <div class="stop c-blue"><i class="fa-solid fa-plug"></i>Connect to port</div>
+        <div class="stop c-orange"><i class="fa-solid fa-lock"></i>TLS</div>
+        <div class="stop c-purple"><i class="fa-solid fa-key"></i>Log in</div>
+        <div class="stop c-green active"><i class="fa-solid fa-envelope"></i>Send</div>
+      </div>
+      <figcaption>An SMTP conversation, step by step. An HTTP API squeezes all of this into one request.</figcaption>
+    </figure>
+    <figure class="illus">
+      <div class="compare">
+        <div class="side c-orange"><span class="chip c-orange">587 · STARTTLS</span><p>"Hello" in plain text, then "let's encrypt", then the secrets.</p></div>
+        <div class="arrow"></div>
+        <div class="side c-blue"><span class="chip c-blue">465 · implicit TLS</span><p>Encrypted from the very first word.</p></div>
+      </div>
+      <figcaption>Both protect your password; they just start encryption at different moments.</figcaption>
+    </figure>
+    <aside class="callout warning">
+      <strong>⚠️ Why hosts block SMTP</strong>
+      <p>Spammers love free servers. So many cloud hosts (like Render's free plan) block outgoing ports 25, 465 and 587. No code change can fix that; only a different road can.</p>
+    </aside>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>Your portfolio's contact form, simplified. Way 1 failed on Render; way 2 works because it looks like any web request.</p>
+<pre><code><span class="comment"># Way 1: SMTP (blocked on Render's free plan)</span>
+with SMTP4(host, 587, timeout=10) as smtp:  <span class="comment"># IPv4-only connection</span>
+    smtp.starttls(context=context)          <span class="comment"># switch on encryption</span>
+    smtp.login(user, app_password)          <span class="comment"># never the real password</span>
+    smtp.send_message(msg)                  <span class="comment"># From, To, Reply-To, Subject</span>
+
+<span class="comment"># Way 2: HTTP API (plain HTTPS on port 443)</span>
+httpx.post(
+    "https://api.resend.com/emails",
+    json={"from": sender, "to": [my_inbox], "reply_to": visitor,
+          "subject": subject, "text": body},
+    headers={"Authorization": f"Bearer {api_key}"},
+    timeout=10,
+)</code></pre>
+    <p>With <code>reply_to</code> set to the visitor, pressing "Reply" in Gmail answers them directly.</p>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ HTTP email API</h3><ul>
+        <li>Works wherever the web works (port 443).</li>
+        <li>One request; the service handles retries and spam reputation.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Trade-offs</h3><ul>
+        <li>You depend on a company, its free limits and an API key to protect.</li>
+        <li>SMTP is a universal standard; an API is specific to one provider.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>Paid hosting plan:</strong> many hosts unblock SMTP ports for paying users.</div>
+      <div><strong>Other email APIs:</strong> SendGrid, Mailgun or Postmark work the same way as Resend.</div>
+      <div><strong>Form services:</strong> a ready-made form backend emails you without any server code.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">The standard protocol used to send email to a mail server is called _____.</p>
+        <details><summary>Answer</summary><p><strong>SMTP.</strong> Simple Mail Transfer Protocol is the set of rules every mail server understands for receiving messages.</p></details></li>
+      <li><p class="q">Which port is mainly used for email passed between mail servers?</p>
+        <ol class="options"><li>443</li><li>587</li><li>80</li><li>25</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> Port 25 is the server-to-server door. B is tempting, but 587 is for programs that log in to submit mail.</p></details></li>
+      <li><p class="q">Is it true that port 587 encrypts the connection from the very first byte?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> On 587 the conversation starts in plain text and STARTTLS switches on encryption. Encryption from the first byte is port 465 (implicit TLS).</p></details></li>
+      <li><p class="q">What is the difference between STARTTLS and implicit TLS?</p>
+        <details><summary>Answer</summary><p>STARTTLS starts unencrypted, then upgrades the same connection to encryption. Implicit TLS is encrypted from the start. Both encrypt before the password is sent.</p></details></li>
+      <li><p class="q">Is it true that an app password is just your normal account password typed into a program?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> It is a separate password created for one program. Your real password stays private.</p></details></li>
+      <li><p class="q">Why is an app password safer than putting your real password in a program?</p>
+        <details><summary>Answer</summary><p>If it leaks, you delete just that app password. Your real password and your 2-step verification stay safe, and the rest of your account is protected.</p></details></li>
+      <li><p class="q">Besides the older IPv4 address, a server name can also resolve to a newer _____ address.</p>
+        <details><summary>Answer</summary><p><strong>IPv6.</strong> DNS can return both kinds. A program may try IPv6 first, even if the machine cannot reach IPv6.</p></details></li>
+      <li><p class="q">A server has no IPv6 route, and a program tries the IPv6 address first. What happens?</p>
+        <ol class="options"><li>The connection fails with "Network is unreachable"</li><li>The email is sent, only more slowly</li><li>The DNS lookup fails</li><li>The mail server rejects the password</li></ol>
+        <details><summary>Answer</summary><p><strong>A.</strong> There is no path to any IPv6 address, so the connection cannot even start. Forcing IPv4 avoids this. D is wrong because the program never reaches the login step.</p></details></li>
+      <li><p class="q">Why do many cloud hosts block outgoing SMTP ports on their free plans?</p>
+        <ol class="options"><li>SMTP is too slow for their servers</li><li>SMTP only works on home computers</li><li>To stop people using free servers to send spam</li><li>To force programs to use IPv6</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> Free servers are easy for spammers to abuse, which harms the host's reputation. A is tempting, but speed has nothing to do with it.</p></details></li>
+      <li><p class="q">What does a program send to prove who it is when it calls an HTTP email API?</p>
+        <ol class="options"><li>Its IPv4 address</li><li>An API key in a request header</li><li>The visitor's email address</li><li>An SMTP app password</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> The API key is a secret token, usually sent in the Authorization header. D is tempting, but app passwords are for SMTP logins.</p></details></li>
+      <li><p class="q">Is it true that an HTTP email API can still deliver to normal inboxes like Gmail?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> The service receives your request, then sends the email with SMTP from its own servers, so it lands in any inbox.</p></details></li>
+      <li><p class="q">Why does an HTTP email API work on a host that blocks SMTP?</p>
+        <details><summary>Answer</summary><p>It uses HTTPS on port 443, the same door as all web traffic, which hosts do not block. The SMTP part happens on the email service's servers, not yours.</p></details></li>
+      <li><p class="q">Is it true that the Reply-To header decides who receives the email?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> The To header decides who receives it. Reply-To only decides where the answer goes when the reader presses "Reply".</p></details></li>
+    </ol>
+  </section>
+
+  <section id="noticing">
+    <h2><span class="icon">🔎</span>Things worth noticing</h2>
+    <ul>
+      <li>The "Network is unreachable" error may have hidden the real cause. Python tries each address in turn and reports only the <em>last</em> failure, so the IPv4 attempt might already have been blocked. Forcing IPv4 is still harmless.</li>
+      <li>Resend's test sender (<code>onboarding@resend.dev</code>) can only send to the address you signed up with. That is fine for a contact form that mails you.</li>
+      <li>The code keeps SMTP as a fallback, so it still works on hosts or computers where port 587 is open.</li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>How DNS works (A, AAAA and MX records)</li>
+      <li>SPF, DKIM and DMARC: how inboxes decide an email is not spam</li>
+      <li>Firewalls and how ports are opened or blocked</li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="sending-email-smtp-vs-api.quiz.json">sending-email-smtp-vs-api.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>
