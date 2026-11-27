@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rate limiting · Lessons</title>
+  <meta name="lesson-subject" content="cs">
+  <meta name="lesson-topic" content="web-development">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-27">
+  <meta name="lesson-source" content="portfolio">
+  <meta name="lesson-quiz" content="rate-limiting.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › CS › Web development</nav>
+    <h1><span class="icon">🚦</span>Rate limiting</h1>
+    <p class="lede">How a server says "slow down": it counts each visitor's requests and refuses the extra ones.</p>
+    <div class="tags"><span>beginner</span><span>cs</span><span>2026-11-27</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>A server that anyone can call can also be flooded: a bot could send 10,000 contact messages in a minute. <strong>Rate limiting</strong> means counting how many requests each visitor made recently and refusing the ones above a limit. A refused request gets the HTTP answer <strong>429 Too Many Requests</strong>. Your portfolio allows <strong>5 messages per visitor per 10 minutes</strong>, and <strong>30 per hour</strong> for everyone together.</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>A free-sample stand at the supermarket: each person gets at most 5 samples, and the stand only has 30 per hour in total.</p>
+    </aside>
+    <figure class="illus">
+      <div class="flow vertical">
+        <div class="node c-blue"><i class="fa-solid fa-user"></i><span class="tag">Visitor</span>sends a message</div>
+        <div class="arrow"></div>
+        <div class="node decision c-purple">Under the limit?</div>
+      </div>
+      <div class="branches" style="margin-top:14px">
+        <div class="branch"><span class="chip c-green">yes</span><div class="node c-green"><i class="fa-solid fa-check"></i><span class="tag">Count it</span>send the email<small>202</small></div></div>
+        <div class="branch"><span class="chip c-red">no</span><div class="node c-red"><i class="fa-solid fa-xmark"></i><span class="tag">Refuse</span>"Too many messages"<small>429</small></div></div>
+      </div>
+      <figcaption>Every request goes through the same check before any real work is done.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>Key</dt><dd>What the server uses to tell visitors apart (user account, IP address…). Requests with the same key share one counter.</dd></div>
+      <div><dt>Window</dt><dd>The stretch of time the limit applies to, like "the last 10 minutes".</dd></div>
+      <div><dt>Fixed window</dt><dd>Counters reset at set times (every hour on the hour).</dd></div>
+      <div><dt>Sliding window</dt><dd>The server remembers the time of each request and only counts the ones from the last 10 minutes, measured from now.</dd></div>
+      <div><dt>Race condition</dt><dd>A bug where two things running at the same moment interfere, so the result depends on who goes first.</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li><strong>Pick a key.</strong> Your code uses the visitor's network: all addresses that share the first 3 numbers of an IPv4 address (a "/24") count as one visitor, so hopping to a neighbour address doesn't reset the limit.</li>
+      <li><strong>Find the real IP safely.</strong> Behind a proxy (a middle server, here Render's), the address arrives in the <code>X-Forwarded-For</code> header. The visitor can write fake entries at the start; only the <strong>last</strong> one, added by the proxy, is trusted.</li>
+      <li><strong>Forget old requests.</strong> Drop timestamps older than the window, then count what is left.</li>
+      <li><strong>Check and count in one step,</strong> inside a lock (a "one at a time" door), before sending.</li>
+      <li><strong>Keep memory bounded.</strong> At most 10,000 visitors are remembered; the oldest are forgotten first.</li>
+    </ol>
+    <figure class="illus">
+      <div class="compare">
+        <div class="side c-orange"><span class="chip c-orange">fixed window</span><p>5 messages at 9:59, counter resets at 10:00, 5 more at 10:00. That's <strong>10 in one minute</strong>.</p></div>
+        <div class="arrow"></div>
+        <div class="side c-green"><span class="chip c-green">sliding window</span><p>At 10:00 the server looks back 10 minutes, still sees 5, and refuses.</p></div>
+      </div>
+      <figcaption>A fixed window can let through almost double the limit around the reset. A sliding window can't.</figcaption>
+    </figure>
+    <aside class="callout warning">
+      <strong>⚠️ Common mistake: check, then count</strong>
+      <p>If you check first and count only after sending the email, 12 parallel requests can all pass the check before any of them is counted. This is a race condition (also called TOCTOU: "time of check, time of use").</p>
+    </aside>
+    <figure class="illus">
+      <div class="compare">
+        <div class="side c-red"><span class="chip c-red">no lock</span><p>12 requests check together, all see "0 sent", all 12 emails go out.</p></div>
+        <div class="arrow"></div>
+        <div class="side c-green"><span class="chip c-green">lock + reserve</span><p>One at a time: check, count, next. 5 pass, 7 get 429.</p></div>
+      </div>
+      <figcaption>Your test with 12 parallel requests checks exactly this.</figcaption>
+    </figure>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>The heart of your limiter (slightly shortened):</p>
+<pre><code>def reserve(key):
+    with _lock:                         <span class="comment"># only one request in here at a time</span>
+        now = time.monotonic()
+        reason = limit_reason(key, now)  <span class="comment"># check...</span>
+        if reason is None:
+            record(key, now)             <span class="comment"># ...and count, in the same step</span>
+        return reason, now
+
+def limit_reason(key, now):
+    hits = _hits.get(key)                <span class="comment"># this visitor's timestamps</span>
+    if hits is not None:
+        _expire(hits, now, RATE_WINDOW)  <span class="comment"># drop the ones older than 10 min</span>
+        if len(hits) &gt;= RATE_LIMIT:
+            return "visitor"             <span class="comment"># becomes a 429</span>
+    ...                                  <span class="comment"># same check for the global limit</span></code></pre>
+    <p>If sending fails, the message <strong>still counts</strong>, so retrying can't bypass the limit. The slot is given back only when the failure is the server's fault (email not set up).</p>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>Stops spam floods and protects paid quotas (your free email allowance).</li>
+        <li>Keeps one visitor from hogging the server.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>People sharing one network (an office, a school) share one limit.</li>
+        <li>A global cap can be used up by an attacker, blocking honest visitors too.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>Token bucket:</strong> each visitor has a bucket of tokens that refills slowly; each request spends one. It allows short bursts but limits the average.</div>
+      <div><strong>Fixed window counter:</strong> one number per visitor, reset on a schedule. Uses less memory, but allows bursts at the reset.</div>
+      <div><strong>Shared store (Redis):</strong> keeps counters outside the app, so several servers share them and restarts don't erase them.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">A server refuses a request that is over the limit with the HTTP status code _____.</p>
+        <details><summary>Answer</summary><p><strong>429.</strong> It means "Too Many Requests" and tells the client to slow down and try again later.</p></details></li>
+      <li><p class="q">Why would a public contact form need a rate limit?</p>
+        <details><summary>Answer</summary><p>Without one, a bot could send thousands of messages, flooding the inbox and using up any paid or free quota. The limit caps how much damage one sender can do.</p></details></li>
+      <li><p class="q">What does the key of a rate limiter decide?</p>
+        <ol class="options"><li>How long the time window lasts</li><li>How many requests are allowed</li><li>Which requests share the same counter</li><li>Which error message is shown</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> The key (an account, an IP address, a network) groups requests: the same key means the same counter. B is the limit itself, not the key.</p></details></li>
+      <li><p class="q">The limit is 3 messages per 10 minutes, with a sliding window. Messages were sent at minutes 0, 2 and 4. When can the next one go through?</p>
+        <div class="q-figure"><svg viewBox="0 0 300 90" role="img" aria-label="A timeline from minute 0 to 15 with messages at minutes 0, 2 and 4"><line x1="20" y1="45" x2="280" y2="45" stroke="#8a94a3" stroke-width="2"/><line x1="20" y1="38" x2="20" y2="52" stroke="#8a94a3" stroke-width="2"/><line x1="105" y1="38" x2="105" y2="52" stroke="#8a94a3" stroke-width="2"/><line x1="190" y1="38" x2="190" y2="52" stroke="#8a94a3" stroke-width="2"/><line x1="275" y1="38" x2="275" y2="52" stroke="#8a94a3" stroke-width="2"/><text x="20" y="72" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="currentColor">0</text><text x="105" y="72" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="currentColor">5</text><text x="190" y="72" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="currentColor">10</text><text x="275" y="72" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="currentColor">15 min</text><circle cx="20" cy="45" r="7" fill="#5b7fe0"/><circle cx="54" cy="45" r="7" fill="#5b7fe0"/><circle cx="88" cy="45" r="7" fill="#5b7fe0"/><text x="54" y="24" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#5b7fe0">3 messages</text></svg></div>
+        <ol class="options"><li>At minute 5</li><li>Just after minute 10</li><li>At minute 14</li><li>At minute 20</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> Just after minute 10, the message from minute 0 leaves the 10-minute window, so only 2 are counted. C is tempting, but you don't wait for all three to expire, only the oldest.</p></details></li>
+      <li><p class="q">Is it true that a fixed window can let through almost twice the limit in a short time?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> A visitor can use the full limit just before the reset and again just after it. A sliding window avoids this.</p></details></li>
+      <li><p class="q">In a token bucket, each request spends one _____, and they refill slowly over time.</p>
+        <details><summary>Answer</summary><p><strong>Token.</strong> When the bucket is empty, requests are refused until it refills.</p></details></li>
+      <li><p class="q">Is it true that a token bucket forbids all bursts of requests?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> A full bucket allows a short burst (spend all tokens at once); it only limits the average rate over time.</p></details></li>
+      <li><p class="q">Why group visitors by network instead of by their exact IP address?</p>
+        <details><summary>Answer</summary><p>One person often controls many addresses in the same block and can switch between them. Grouping by network stops them from getting a fresh limit each time.</p></details></li>
+      <li><p class="q">Is it true that a server can safely trust the first address in the X-Forwarded-For header?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> The visitor can write anything at the start of that header. Only the entry added by your own proxy (the last one, on Render) can be trusted.</p></details></li>
+      <li><p class="q">Why must the memory of a rate limiter be bounded?</p>
+        <ol class="options"><li>To make the code easier to read</li><li>Because limits must reset every hour</li><li>Because a dictionary cannot hold many entries</li><li>Because requests from many addresses could fill memory until the server crashes</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> Every new key adds an entry. Without a maximum, an attacker using many addresses could grow memory forever. C is wrong: dictionaries can grow very large, which is exactly the danger.</p></details></li>
+      <li><p class="q">A bug where parallel requests interfere and the result depends on who goes first is a race _____.</p>
+        <details><summary>Answer</summary><p><strong>Condition.</strong> In a rate limiter, several requests can all pass the check before any of them is counted.</p></details></li>
+      <li><p class="q">How does a lock fix the race condition in a rate limiter?</p>
+        <details><summary>Answer</summary><p>It lets only one request at a time check the counter and count itself, in one step. The next request then sees the updated count, so no extra request slips through.</p></details></li>
+      <li><p class="q">Why should a message that failed to send still count against the limit?</p>
+        <ol class="options"><li>So retrying can't be used to send unlimited requests</li><li>Because failed requests are always attacks</li><li>To make the error message shorter</li><li>Because the server cannot tell it failed</li></ol>
+        <details><summary>Answer</summary><p><strong>A.</strong> Otherwise someone could retry forever. Also, a timeout may have delivered the email anyway. B is too strong: honest sends fail too.</p></details></li>
+      <li><p class="q">Is it true that a global limit can block honest visitors if an attacker uses it up?</p>
+        <details><summary>Answer</summary><p><strong>Yes, true.</strong> The global cap is shared by everyone. It protects the inbox and quota, but the price is that a flood can make the form unavailable for a while.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="noticing">
+    <h2><span class="icon">🔎</span>Things worth noticing</h2>
+    <ul>
+      <li>The counters live in memory, so they are erased whenever the server restarts (free Render servers sleep and restart often). With two servers, each would have its own counters.</li>
+      <li>Trusting the last <code>X-Forwarded-For</code> entry is only safe behind Render's proxy. Run without it, a visitor could set that header to anything.</li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>Locks and threads in more depth</li>
+      <li>Redis for shared rate limits</li>
+      <li>The <code>Retry-After</code> header</li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="rate-limiting.quiz.json">rate-limiting.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>

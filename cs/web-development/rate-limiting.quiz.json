@@ -1,0 +1,115 @@
+{
+  "lesson": "cs/web-development/rate-limiting",
+  "title": "Rate limiting",
+  "subject": "cs",
+  "topic": "web-development",
+  "difficulty": "beginner",
+  "created": "2026-11-27",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "fill_blank",
+      "question": "A server refuses a request that is over the limit with the HTTP status code _____.",
+      "answer": "429",
+      "accept": ["429 Too Many Requests"],
+      "explanation": "It means \"Too Many Requests\" and tells the client to slow down and try again later."
+    },
+    {
+      "id": "q2",
+      "type": "open",
+      "question": "Why would a public contact form need a rate limit?",
+      "answer": "Without one, a bot could send thousands of messages, flooding the inbox and using up any paid or free quota.",
+      "explanation": "The limit caps how much damage one sender can do."
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "question": "What does the key of a rate limiter decide?",
+      "options": ["How long the time window lasts", "How many requests are allowed", "Which requests share the same counter", "Which error message is shown"],
+      "answer": 2,
+      "explanation": "The key (an account, an IP address, a network) groups requests: the same key means the same counter. B is the limit itself, not the key."
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "question": "The limit is 3 messages per 10 minutes, with a sliding window. Messages were sent at minutes 0, 2 and 4. When can the next one go through?",
+      "figure": "<svg viewBox=\"0 0 300 90\" role=\"img\" aria-label=\"A timeline from minute 0 to 15 with messages at minutes 0, 2 and 4\"><line x1=\"20\" y1=\"45\" x2=\"280\" y2=\"45\" stroke=\"#8a94a3\" stroke-width=\"2\"/><line x1=\"20\" y1=\"38\" x2=\"20\" y2=\"52\" stroke=\"#8a94a3\" stroke-width=\"2\"/><line x1=\"105\" y1=\"38\" x2=\"105\" y2=\"52\" stroke=\"#8a94a3\" stroke-width=\"2\"/><line x1=\"190\" y1=\"38\" x2=\"190\" y2=\"52\" stroke=\"#8a94a3\" stroke-width=\"2\"/><line x1=\"275\" y1=\"38\" x2=\"275\" y2=\"52\" stroke=\"#8a94a3\" stroke-width=\"2\"/><text x=\"20\" y=\"72\" text-anchor=\"middle\" font-family=\"system-ui,sans-serif\" font-size=\"12\" fill=\"currentColor\">0</text><text x=\"105\" y=\"72\" text-anchor=\"middle\" font-family=\"system-ui,sans-serif\" font-size=\"12\" fill=\"currentColor\">5</text><text x=\"190\" y=\"72\" text-anchor=\"middle\" font-family=\"system-ui,sans-serif\" font-size=\"12\" fill=\"currentColor\">10</text><text x=\"275\" y=\"72\" text-anchor=\"middle\" font-family=\"system-ui,sans-serif\" font-size=\"12\" fill=\"currentColor\">15 min</text><circle cx=\"20\" cy=\"45\" r=\"7\" fill=\"#5b7fe0\"/><circle cx=\"54\" cy=\"45\" r=\"7\" fill=\"#5b7fe0\"/><circle cx=\"88\" cy=\"45\" r=\"7\" fill=\"#5b7fe0\"/><text x=\"54\" y=\"24\" text-anchor=\"middle\" font-family=\"system-ui,sans-serif\" font-size=\"12\" font-weight=\"700\" fill=\"#5b7fe0\">3 messages</text></svg>",
+      "options": ["At minute 5", "Just after minute 10", "At minute 14", "At minute 20"],
+      "answer": 1,
+      "explanation": "Just after minute 10, the message from minute 0 leaves the 10-minute window, so only 2 are counted. C is tempting, but you don't wait for all three to expire, only the oldest."
+    },
+    {
+      "id": "q5",
+      "type": "true_false",
+      "question": "Is it true that a fixed window can let through almost twice the limit in a short time?",
+      "answer": true,
+      "explanation": "A visitor can use the full limit just before the reset and again just after it. A sliding window avoids this."
+    },
+    {
+      "id": "q6",
+      "type": "fill_blank",
+      "question": "In a token bucket, each request spends one _____, and they refill slowly over time.",
+      "answer": "token",
+      "accept": ["tokens"],
+      "explanation": "When the bucket is empty, requests are refused until it refills."
+    },
+    {
+      "id": "q7",
+      "type": "true_false",
+      "question": "Is it true that a token bucket forbids all bursts of requests?",
+      "answer": false,
+      "explanation": "A full bucket allows a short burst (spend all tokens at once); it only limits the average rate over time."
+    },
+    {
+      "id": "q8",
+      "type": "open",
+      "question": "Why group visitors by network instead of by their exact IP address?",
+      "answer": "One person often controls many addresses in the same block and can switch between them.",
+      "explanation": "Grouping by network stops them from getting a fresh limit each time."
+    },
+    {
+      "id": "q9",
+      "type": "true_false",
+      "question": "Is it true that a server can safely trust the first address in the X-Forwarded-For header?",
+      "answer": false,
+      "explanation": "The visitor can write anything at the start of that header. Only the entry added by your own proxy (the last one, on Render) can be trusted."
+    },
+    {
+      "id": "q10",
+      "type": "multiple_choice",
+      "question": "Why must the memory of a rate limiter be bounded?",
+      "options": ["To make the code easier to read", "Because limits must reset every hour", "Because a dictionary cannot hold many entries", "Because requests from many addresses could fill memory until the server crashes"],
+      "answer": 3,
+      "explanation": "Every new key adds an entry. Without a maximum, an attacker using many addresses could grow memory forever. C is wrong: dictionaries can grow very large, which is exactly the danger."
+    },
+    {
+      "id": "q11",
+      "type": "fill_blank",
+      "question": "A bug where parallel requests interfere and the result depends on who goes first is a race _____.",
+      "answer": "condition",
+      "explanation": "In a rate limiter, several requests can all pass the check before any of them is counted."
+    },
+    {
+      "id": "q12",
+      "type": "open",
+      "question": "How does a lock fix the race condition in a rate limiter?",
+      "answer": "It lets only one request at a time check the counter and count itself, in one step.",
+      "explanation": "The next request then sees the updated count, so no extra request slips through."
+    },
+    {
+      "id": "q13",
+      "type": "multiple_choice",
+      "question": "Why should a message that failed to send still count against the limit?",
+      "options": ["So retrying can't be used to send unlimited requests", "Because failed requests are always attacks", "To make the error message shorter", "Because the server cannot tell it failed"],
+      "answer": 0,
+      "explanation": "Otherwise someone could retry forever. Also, a timeout may have delivered the email anyway. B is too strong: honest sends fail too."
+    },
+    {
+      "id": "q14",
+      "type": "true_false",
+      "question": "Is it true that a global limit can block honest visitors if an attacker uses it up?",
+      "answer": true,
+      "explanation": "The global cap is shared by everyone. It protects the inbox and quota, but the price is that a flood can make the form unavailable for a while."
+    }
+  ]
+}
