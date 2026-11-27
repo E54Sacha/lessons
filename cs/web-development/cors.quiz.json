@@ -1,0 +1,85 @@
+{
+  "lesson": "cs/web-development/cors",
+  "title": "CORS: how browsers let one website call another",
+  "subject": "cs",
+  "topic": "web-development",
+  "difficulty": "beginner",
+  "created": "2026-11-27",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "question": "Which change turns a URL into a different origin?",
+      "options": ["Changing the path, like /about to /contact", "Adding ?page=2 at the end", "Changing http to https", "Adding #top at the end"],
+      "answer": 2,
+      "explanation": "An origin is scheme + domain + port, so changing the scheme changes the origin. The path (A) is not part of the origin."
+    },
+    {
+      "id": "q2",
+      "type": "fill_blank",
+      "question": "The browser rule that a page may only read responses from its own origin is called the _____ policy.",
+      "answer": "same-origin",
+      "accept": ["same origin", "Same-origin", "Same origin"],
+      "explanation": "It is the default; CORS is the way a server relaxes it for chosen sites."
+    },
+    {
+      "id": "q3",
+      "type": "open",
+      "question": "Why do browsers have the same-origin policy at all?",
+      "answer": "To protect users: without it, any page you visit could use your logged-in browser to read your data from other sites, like your bank or email.",
+      "explanation": "The policy stops one site from silently reading another site's answers through your browser."
+    },
+    {
+      "id": "q4",
+      "type": "true_false",
+      "question": "Is it true that the server is the one that blocks a cross-origin request when CORS fails?",
+      "answer": false,
+      "explanation": "The server only sends (or doesn't send) permission headers. The browser reads them and blocks the page from getting the reply."
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "question": "What is a preflight request?",
+      "options": ["A request that logs the user in first", "An OPTIONS request the browser sends first to ask if the real request is allowed", "A request the server sends to the browser before loading a page", "A copy of the request kept in case the first one fails"],
+      "answer": 1,
+      "explanation": "Before a non-simple request (like a POST with JSON), the browser asks permission with OPTIONS. It has nothing to do with logging in (A)."
+    },
+    {
+      "id": "q6",
+      "type": "true_false",
+      "question": "Is it true that every cross-origin request starts with a preflight?",
+      "answer": false,
+      "explanation": "Simple requests, like a plain GET with no special headers, are sent directly. The browser still checks the Allow-Origin header on the reply."
+    },
+    {
+      "id": "q7",
+      "type": "fill_blank",
+      "question": "The server names the origin allowed to read its reply in the _____ header.",
+      "answer": "Access-Control-Allow-Origin",
+      "accept": ["access-control-allow-origin", "Allow-Origin", "allow-origin"],
+      "explanation": "If it is missing or names another origin, the browser hides the reply from the page."
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "question": "If the allowed origin is set to the wrong address, what happens when the real site calls the API?",
+      "options": ["The server crashes", "The request works, CORS is only a warning", "The server returns 404 Not Found", "The browser blocks the call, even though the server works"],
+      "answer": 3,
+      "explanation": "The server answers normally but without a matching Allow-Origin header, so the browser refuses. This is exactly what can happen with a wrong deployment address."
+    },
+    {
+      "id": "q9",
+      "type": "open",
+      "question": "Why can curl call an API that the browser blocks with a CORS error?",
+      "answer": "CORS is enforced by browsers only. curl is not a browser, so it never checks the Allow-Origin header and simply shows the reply.",
+      "explanation": "The permission check lives in the browser, not on the server, so any non-browser client skips it."
+    },
+    {
+      "id": "q10",
+      "type": "true_false",
+      "question": "Is it true that CORS stops attackers from sending requests to your API?",
+      "answer": false,
+      "explanation": "Anyone can call the API with curl or a script. Real protection needs input validation, rate limits or authentication on the server."
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CORS: how browsers let one website call another · Lessons</title>
+  <meta name="lesson-subject" content="cs">
+  <meta name="lesson-topic" content="web-development">
+  <meta name="lesson-difficulty" content="beginner">
+  <meta name="lesson-created" content="2026-11-27">
+  <meta name="lesson-source" content="portfolio">
+  <meta name="lesson-quiz" content="cors.quiz.json">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <nav class="crumbs"><a href="../../index.html">Lessons</a> › Computer science › Web development</nav>
+    <h1><span class="icon">🌐</span>CORS: how browsers let one website call another</h1>
+    <p class="lede">CORS is the set of rules a browser follows to decide if a web page may read the answer from a server on another address.</p>
+    <div class="tags"><span>beginner</span><span>cs</span><span>2026-11-27</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="idea">
+    <h2><span class="icon">💡</span>The idea</h2>
+    <p>By default, a browser does not let a page read answers from a different <strong>origin</strong> (another site address). This rule is the <strong>same-origin policy</strong>. It protects you: a random page you visit can't quietly read your bank's data using your login. <strong>CORS</strong> (Cross-Origin Resource Sharing) is how a server says "this other site is allowed to read my answers".</p>
+    <aside class="callout">
+      <strong>💡 Think of it like this</strong>
+      <p>The browser is a careful parent passing notes between kids. It delivers a note to another house, but it only hands the reply to the child if the reply says "yes, this child may read it".</p>
+    </aside>
+    <figure class="illus">
+      <div class="flow keep-row">
+        <div class="node c-blue"><i class="fa-solid fa-window-maximize"></i><span class="tag">Page</span>vercel.app</div>
+        <div class="arrow c-purple">asks via browser</div>
+        <div class="node c-purple"><i class="fa-solid fa-server"></i><span class="tag">API</span>onrender.com</div>
+      </div>
+      <figcaption>Two different origins: the browser checks the API's permission before the page can read the reply.</figcaption>
+    </figure>
+  </section>
+
+  <section id="key-words">
+    <h2><span class="icon">📖</span>Key words</h2>
+    <dl class="terms">
+      <div><dt>Origin</dt><dd>The scheme + domain + port of a URL, like <code>https://example.com:443</code>; change any part and it is a different origin.</dd></div>
+      <div><dt>Same-origin policy</dt><dd>The browser's default rule: a page may only read responses from its own origin.</dd></div>
+      <div><dt>Header</dt><dd>A small labelled piece of information sent with a request or a response.</dd></div>
+      <div><dt>Access-Control-Allow-Origin</dt><dd>The response header in which the server names the origin that may read the answer.</dd></div>
+      <div><dt>Preflight</dt><dd>A test request with the method <code>OPTIONS</code> that the browser sends first, to ask "may I send this?".</dd></div>
+    </dl>
+  </section>
+
+  <section id="how">
+    <h2><span class="icon">⚙️</span>How it works</h2>
+    <ol class="steps">
+      <li>The page wants to call another origin. The browser adds an <code>Origin</code> header saying where the page comes from.</li>
+      <li>For "non-simple" requests (for example a POST with JSON), the browser first sends a <strong>preflight</strong> <code>OPTIONS</code> request.</li>
+      <li>The server answers. If it trusts that origin, it adds <code>Access-Control-Allow-Origin: &lt;that origin&gt;</code>.</li>
+      <li>The browser compares. If the header matches, it sends the real request and gives the reply to the page. If not, it blocks and shows a CORS error in the console.</li>
+    </ol>
+    <figure class="illus">
+      <div class="flow vertical">
+        <div class="node c-gray"><i class="fa-solid fa-paper-plane"></i>Preflight OPTIONS<small>Origin: https://…vercel.app</small></div>
+        <div class="arrow"></div>
+        <div class="node decision c-blue">Does Allow-Origin match the page?</div>
+      </div>
+      <div class="branches" style="margin-top:14px">
+        <div class="branch"><span class="chip c-green">yes</span><div class="node c-green"><i class="fa-solid fa-check"></i>Real POST sent<small>page reads reply</small></div></div>
+        <div class="branch"><span class="chip c-red">no</span><div class="node c-red"><i class="fa-solid fa-xmark"></i>Browser blocks<small>CORS error</small></div></div>
+      </div>
+      <figcaption>The server only gives permission. The browser is the one that decides and blocks.</figcaption>
+    </figure>
+    <aside class="callout warning">
+      <strong>⚠️ Common mistake</strong>
+      <p>CORS is not a security wall for the server. Tools like <code>curl</code> are not browsers, so they ignore CORS completely. Anyone can still call your API directly. Protect it with validation, rate limits or authentication.</p>
+    </aside>
+    <figure class="illus">
+      <div class="compare">
+        <div class="side c-blue"><span class="chip c-blue">browser</span><p>Checks the Allow-Origin header and may hide the reply from the page.</p></div>
+        <div class="arrow"></div>
+        <div class="side c-orange"><span class="chip c-orange">curl / script</span><p>Never checks it: always gets the reply.</p></div>
+      </div>
+      <figcaption>Why your API "worked with curl" but the form still failed in the browser.</figcaption>
+    </figure>
+  </section>
+
+  <section id="example">
+    <h2><span class="icon">🔍</span>Example</h2>
+    <p>Your contact form on Vercel posts JSON to your FastAPI server on Render: two origins. The API lists the allowed origins:</p>
+<pre><code><span class="comment"># api/app/main.py</span>
+app.add_middleware(
+    CORSMiddleware,
+    <span class="comment"># read from the ALLOWED_ORIGINS env var, comma-separated</span>
+    allow_origins=[o.strip() for o in os.getenv("ALLOWED_ORIGINS", DEFAULT_ORIGINS).split(",") if o.strip()],
+    allow_methods=["POST"],          <span class="comment"># only POST is allowed cross-origin</span>
+    allow_headers=["Content-Type"],  <span class="comment"># the form sends JSON</span>
+)
+
+<span class="comment"># api/tests/test_contact.py: the preflight check</span>
+ok  = client.options("/contact", headers={"Origin": SITE, "Access-Control-Request-Method": "POST"})
+bad = client.options("/contact", headers={"Origin": "https://evil.example", ...})
+assert ok.headers.get("access-control-allow-origin") == SITE
+assert "access-control-allow-origin" not in bad.headers</code></pre>
+    <p>At first, <code>ALLOWED_ORIGINS</code> held the wrong Vercel address. The server was fine (curl worked), but its preflight answer never named the real site, so the browser would have blocked the form. The test now fakes a preflight from the right and a wrong origin to catch this.</p>
+  </section>
+
+  <section id="why">
+    <h2><span class="icon">⚖️</span>Why use it</h2>
+    <div class="pros-cons">
+      <div class="pros"><h3>✅ Advantages</h3><ul>
+        <li>Lets a front end and an API live on different domains safely.</li>
+        <li>Protects users: other sites can't read your API's answers through their browser.</li>
+      </ul></div>
+      <div class="cons"><h3>⚠️ Limits</h3><ul>
+        <li>Does nothing against curl, scripts or bots.</li>
+        <li>Easy to misconfigure: one wrong letter in the origin breaks the site.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section id="other-ways">
+    <h2><span class="icon">🔀</span>Other ways</h2>
+    <div class="alternatives">
+      <div><strong>Same origin:</strong> serve the API under the site's own domain (e.g. <code>/api</code>), so CORS is never needed.</div>
+      <div><strong>Proxy:</strong> the site's own server forwards the request to the API; server-to-server calls ignore CORS.</div>
+      <div><strong>Allow every origin (<code>*</code>):</strong> simple, fine for public data, but any site can then read the answers.</div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2><span class="icon">🎯</span>Quiz</h2>
+    <ol class="quiz">
+      <li><p class="q">Which change turns a URL into a different origin?</p>
+        <ol class="options"><li>Changing the path, like /about to /contact</li><li>Adding ?page=2 at the end</li><li>Changing http to https</li><li>Adding #top at the end</li></ol>
+        <details><summary>Answer</summary><p><strong>C.</strong> An origin is scheme + domain + port, so changing the scheme changes the origin. The path (A) is not part of the origin.</p></details></li>
+      <li><p class="q">The browser rule that a page may only read responses from its own origin is called the _____ policy.</p>
+        <details><summary>Answer</summary><p><strong>Same-origin.</strong> It is the default; CORS is the way a server relaxes it for chosen sites.</p></details></li>
+      <li><p class="q">Why do browsers have the same-origin policy at all?</p>
+        <details><summary>Answer</summary><p>To protect users: without it, any page you visit could use your logged-in browser to read your data from other sites, like your bank or email.</p></details></li>
+      <li><p class="q">Is it true that the server is the one that blocks a cross-origin request when CORS fails?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> The server only sends (or doesn't send) permission headers. The browser reads them and blocks the page from getting the reply.</p></details></li>
+      <li><p class="q">What is a preflight request?</p>
+        <ol class="options"><li>A request that logs the user in first</li><li>An OPTIONS request the browser sends first to ask if the real request is allowed</li><li>A request the server sends to the browser before loading a page</li><li>A copy of the request kept in case the first one fails</li></ol>
+        <details><summary>Answer</summary><p><strong>B.</strong> Before a non-simple request (like a POST with JSON), the browser asks permission with OPTIONS. It has nothing to do with logging in (A).</p></details></li>
+      <li><p class="q">Is it true that every cross-origin request starts with a preflight?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> Simple requests, like a plain GET with no special headers, are sent directly. The browser still checks the Allow-Origin header on the reply.</p></details></li>
+      <li><p class="q">The server names the origin allowed to read its reply in the _____ header.</p>
+        <details><summary>Answer</summary><p><strong>Access-Control-Allow-Origin.</strong> If it is missing or names another origin, the browser hides the reply from the page.</p></details></li>
+      <li><p class="q">If the allowed origin is set to the wrong address, what happens when the real site calls the API?</p>
+        <ol class="options"><li>The server crashes</li><li>The request works, CORS is only a warning</li><li>The server returns 404 Not Found</li><li>The browser blocks the call, even though the server works</li></ol>
+        <details><summary>Answer</summary><p><strong>D.</strong> The server answers normally but without a matching Allow-Origin header, so the browser refuses. This is exactly what can happen with a wrong deployment address.</p></details></li>
+      <li><p class="q">Why can curl call an API that the browser blocks with a CORS error?</p>
+        <details><summary>Answer</summary><p>CORS is enforced by browsers only. curl is not a browser, so it never checks the Allow-Origin header and simply shows the reply.</p></details></li>
+      <li><p class="q">Is it true that CORS stops attackers from sending requests to your API?</p>
+        <details><summary>Answer</summary><p><strong>No, false.</strong> Anyone can call the API with curl or a script. Real protection needs input validation, rate limits or authentication on the server.</p></details></li>
+    </ol>
+  </section>
+
+  <section id="noticing">
+    <h2><span class="icon">🔎</span>Things worth noticing</h2>
+    <ul>
+      <li>The form's "wake up" call to <code>/health</code> is a simple GET with no preflight. The request reaches the server even if the browser later hides the reply, which is why it can still wake Render up. CORS blocks reading, not sending.</li>
+      <li>Origins must match exactly: no trailing slash, right scheme. <code>https://site.vercel.app/</code> would not match.</li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <h2><span class="icon">🧭</span>What to ask about next</h2>
+    <ul>
+      <li>Cookies and credentials in cross-origin requests (<code>allow_credentials</code>)</li>
+      <li>CSRF: why a form on another site can still <em>send</em> requests</li>
+      <li>Rate limiting, which really protects your API</li>
+    </ul>
+  </section>
+</main>
+
+<footer>Lesson written by the tutor of <a href="https://github.com/E54Sacha/claude-dev-toolkit">claude-dev-toolkit</a> · Quiz data: <a href="cors.quiz.json">cors.quiz.json</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+<script src="../../assets/lesson.js"></script>
+</body>
+</html>
