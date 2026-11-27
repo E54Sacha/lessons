@@ -1,0 +1,80 @@
+{
+  "lesson": "physics/quantum-physics/quantum-big-ideas",
+  "title": "Les grandes idées de la physique quantique",
+  "subject": "physics",
+  "topic": "quantum-physics",
+  "difficulty": "beginner",
+  "created": "2026-11-27",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "fill_blank",
+      "question": "L'énergie de la lumière est échangée par petits paquets appelés des _____.",
+      "answer": "photons",
+      "accept": ["photon", "quanta", "quantum", "quantums"],
+      "explanation": "Un photon est le quantum de la lumière : un paquet d'énergie qu'on ne peut pas couper. C'est l'idée de Planck et d'Einstein."
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "question": "Pourquoi une lumière rouge très forte n'arrache-t-elle aucun électron, alors qu'une faible lumière violette y arrive ?",
+      "options": [
+        "La lumière rouge est absorbée par l'air avant d'arriver",
+        "Chaque photon rouge porte trop peu d'énergie, quel que soit leur nombre",
+        "La lumière rouge va moins vite que la lumière violette",
+        "Il faudrait juste éclairer plus longtemps avec le rouge"
+      ],
+      "answer": 1,
+      "explanation": "Chaque électron est arraché par un seul photon. Un photon rouge est un paquet trop petit, et en envoyer plus ne change rien. D est tentant, mais attendre ne grossit pas les paquets ; et toutes les couleurs vont à la même vitesse (C)."
+    },
+    {
+      "id": "q3",
+      "type": "open",
+      "question": "Quand on envoie des électrons un par un vers deux fentes, que voit-on sur l'écran, et pourquoi est-ce étrange ?",
+      "answer": "Chaque électron fait un seul point, comme une bille. Mais avec beaucoup d'électrons, les points forment des bandes d'interférence, comme une vague.",
+      "explanation": "C'est étrange car chaque électron, seul, se comporte comme une onde passée par les deux fentes."
+    },
+    {
+      "id": "q4",
+      "type": "true_false",
+      "question": "Est-il vrai que si l'on détecte par quelle fente passe chaque électron, les bandes d'interférence disparaissent ?",
+      "answer": true,
+      "explanation": "Savoir par quelle fente il passe est une mesure : elle détruit la superposition « les deux fentes à la fois ». Il ne reste que deux taches, comme avec des billes."
+    },
+    {
+      "id": "q5",
+      "type": "true_false",
+      "question": "Est-il vrai que le chat de Schrödinger est à moitié mort et à moitié vivant ?",
+      "answer": false,
+      "explanation": "Schrödinger a inventé ce chat pour montrer l'absurdité d'appliquer la superposition à un gros objet. Une superposition n'est pas un « à moitié » : quand on mesure, on trouve toujours un chat entièrement vivant ou entièrement mort. Et un vrai chat interagit sans arrêt avec l'air de la boîte : la décohérence fixe le résultat bien avant qu'on ouvre."
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "question": "Que peut-on prévoir à l'avance sur le résultat d'une mesure quantique ?",
+      "options": [
+        "Le résultat exact, avec des instruments assez précis",
+        "Rien du tout, tout est hasard",
+        "Le résultat, à condition que personne ne regarde",
+        "Les probabilités de chaque résultat possible"
+      ],
+      "answer": 3,
+      "explanation": "La théorie donne les chances de chaque résultat, de façon très précise, mais pas le résultat d'une mesure isolée. B est tentant, mais le hasard quantique suit des règles exactes : sur beaucoup de mesures, les proportions sont celles prévues."
+    },
+    {
+      "id": "q7",
+      "type": "fill_blank",
+      "question": "Pour qu'une mesure fixe un résultat, pas besoin d'un humain : il suffit d'une _____ avec un appareil ou l'environnement.",
+      "answer": "interaction",
+      "accept": ["interactions"],
+      "explanation": "Un détecteur, une molécule d'air ou un photon qui rebondit suffit à « observer » un système. La conscience n'y joue aucun rôle."
+    },
+    {
+      "id": "q8",
+      "type": "true_false",
+      "question": "Est-il vrai que l'intrication permet d'envoyer un message instantané à l'autre bout de l'univers ?",
+      "answer": false,
+      "explanation": "Chaque résultat sort au hasard : personne ne peut le choisir, donc personne ne peut y glisser un message. Le lien entre les deux listes de résultats n'apparaît que quand on les compare par un moyen normal, pas plus rapide que la lumière."
+    }
+  ]
+}
