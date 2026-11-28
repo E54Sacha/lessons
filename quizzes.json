@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "subjects": {
+    "cs": "Computer science: programming, tools, algorithms, systems, AI tooling",
+    "maths": "Mathematics: algebra, analysis, probability, discrete maths",
+    "physics": "Physics: mechanics, electricity, waves, thermodynamics",
+    "chemistry": "Chemistry: atoms, elements, bonds, reactions, acids and bases",
+    "finance": "Finance: markets, trading, accounting, personal finance",
+    "general-knowledge": "General knowledge: history, geography, science facts, culture"
+  },
+  "quizzes": [
+    {
+      "id": "chemistry/atomic-structure/atoms-and-elements",
+      "title": "Atoms and elements",
+      "subject": "chemistry",
+      "topic": "atomic-structure",
+      "created": "2026-11-26",
+      "questions": 13,
+      "quiz": "chemistry/atomic-structure/atoms-and-elements.quiz.json",
+      "page": "chemistry/atomic-structure/atoms-and-elements.html"
+    },
+    {
+      "id": "cs/claude-code/skills",
+      "title": "Claude Code skills",
+      "subject": "cs",
+      "topic": "claude-code",
+      "created": "2026-11-26",
+      "questions": 8,
+      "quiz": "cs/claude-code/skills.quiz.json",
+      "page": "cs/claude-code/skills.html"
+    },
+    {
+      "id": "cs/claude-code/subagents",
+      "title": "Claude Code subagents",
+      "subject": "cs",
+      "topic": "claude-code",
+      "created": "2026-11-26",
+      "questions": 9,
+      "quiz": "cs/claude-code/subagents.quiz.json",
+      "page": "cs/claude-code/subagents.html"
+    },
+    {
+      "id": "cs/databases/database-migrations-alembic",
+      "title": "Database migrations with Alembic",
+      "subject": "cs",
+      "topic": "databases",
+      "created": "2026-11-27",
+      "questions": 16,
+      "quiz": "cs/databases/database-migrations-alembic.quiz.json",
+      "page": "cs/databases/database-migrations-alembic.html"
+    },
+    {
+      "id": "cs/devops/docker-and-docker-compose",
+      "title": "Docker and Docker Compose",
+      "subject": "cs",
+      "topic": "devops",
+      "created": "2026-11-27",
+      "questions": 16,
+      "quiz": "cs/devops/docker-and-docker-compose.quiz.json",
+      "page": "cs/devops/docker-and-docker-compose.html"
+    },
+    {
+      "id": "cs/networking/sending-email-smtp-vs-api",
+      "title": "How programs send email: SMTP vs HTTP email APIs",
+      "subject": "cs",
+      "topic": "networking",
+      "created": "2026-11-27",
+      "questions": 13,
+      "quiz": "cs/networking/sending-email-smtp-vs-api.quiz.json",
+      "page": "cs/networking/sending-email-smtp-vs-api.html"
+    },
+    {
+      "id": "cs/security/password-hashing-and-session-tokens",
+      "title": "Password hashing and session tokens",
+      "subject": "cs",
+      "topic": "security",
+      "created": "2026-11-27",
+      "questions": 16,
+      "quiz": "cs/security/password-hashing-and-session-tokens.quiz.json",
+      "page": "cs/security/password-hashing-and-session-tokens.html"
+    },
+    {
+      "id": "cs/web-development/cors",
+      "title": "CORS: how browsers let one website call another",
+      "subject": "cs",
+      "topic": "web-development",
+      "created": "2026-11-27",
+      "questions": 10,
+      "quiz": "cs/web-development/cors.quiz.json",
+      "page": "cs/web-development/cors.html"
+    },
+    {
+      "id": "cs/web-development/rate-limiting",
+      "title": "Rate limiting",
+      "subject": "cs",
+      "topic": "web-development",
+      "created": "2026-11-27",
+      "questions": 14,
+      "quiz": "cs/web-development/rate-limiting.quiz.json",
+      "page": "cs/web-development/rate-limiting.html"
+    },
+    {
+      "id": "cs/web-development/static-sites-and-i18n-routing",
+      "title": "Static sites and multilingual (i18n) routing",
+      "subject": "cs",
+      "topic": "web-development",
+      "created": "2026-11-27",
+      "questions": 12,
+      "quiz": "cs/web-development/static-sites-and-i18n-routing.quiz.json",
+      "page": "cs/web-development/static-sites-and-i18n-routing.html"
+    },
+    {
+      "id": "maths/linear-algebra/matrices",
+      "title": "Matrices",
+      "subject": "maths",
+      "topic": "linear-algebra",
+      "created": "2026-11-26",
+      "questions": 11,
+      "quiz": "maths/linear-algebra/matrices.quiz.json",
+      "page": "maths/linear-algebra/matrices.html"
+    },
+    {
+      "id": "physics/mechanics/newtons-laws",
+      "title": "Newton's laws of motion",
+      "subject": "physics",
+      "topic": "mechanics",
+      "created": "2026-11-26",
+      "questions": 12,
+      "quiz": "physics/mechanics/newtons-laws.quiz.json",
+      "page": "physics/mechanics/newtons-laws.html"
+    },
+    {
+      "id": "physics/quantum-physics/quantum-big-ideas",
+      "title": "Les grandes idées de la physique quantique",
+      "subject": "physics",
+      "topic": "quantum-physics",
+      "created": "2026-11-27",
+      "questions": 8,
+      "quiz": "physics/quantum-physics/quantum-big-ideas.quiz.json",
+      "page": "physics/quantum-physics/quantum-big-ideas.html"
+    }
+  ]
+}
